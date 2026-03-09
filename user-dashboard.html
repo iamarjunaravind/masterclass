@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Netixa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1e0a3d;
+            --accent-blue: #2563eb;
+            --accent-purple: #6333ff;
+            --marketing-red: #b90404;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { background: #0f0a1f; color: #fff; line-height: 1.6; }
+
+        .header {
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo { font-family: 'Outfit'; font-size: 24px; font-weight: 900; color: #fff; text-decoration: none; }
+
+        .container { max-width: 1100px; margin: 50px auto; padding: 0 20px; }
+
+        .welcome-hero {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            padding: 50px;
+            border-radius: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-hero::after {
+            content: "🚀";
+            position: absolute;
+            right: 40px;
+            bottom: -10px;
+            font-size: 120px;
+            opacity: 0.1;
+        }
+
+        .welcome-hero h1 { font-family: 'Outfit'; font-size: 40px; font-weight: 800; margin-bottom: 10px; }
+
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card h2 { font-family: 'Outfit'; font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .order-info b { display: block; font-size: 15px; }
+        .order-info span { font-size: 12px; opacity: 0.5; }
+
+        .btn-access {
+            background: #fff;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .btn-access:hover { background: var(--accent-blue); color: #fff; }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item-icon { font-size: 24px; }
+        .cart-item-details b { display: block; font-size: 14px; }
+        .cart-item-details span { font-weight: 800; color: var(--marketing-red); font-size: 13px; }
+
+        .btn-logout {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-logout:hover { color: #ff4d4d; }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index" class="logo">NETIXA</a>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="product" style="color: #fff; text-decoration: none; font-weight: 600;">Shop</a>
+            <a href="#" onclick="logout()" class="btn-logout">Logout</a>
+            <div style="width: 36px; height: 36px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 14px;" id="userInitial">U</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-hero">
+            <h1 id="welcomeTitle">Welcome Back!</h1>
+            <p>Access your digital assets, track your progress, and manage your masterclass journey.</p>
+        </div>
+
+        <div class="grid">
+            <div class="left-col">
+                <div class="card">
+                    <h2>📦 My Digital Assets</h2>
+                    <div id="noOrders" style="opacity: 0.5; padding: 20px; text-align: center; border: 2px dashed var(--border); border-radius: 12px;">
+                        No purchases yet. Start your journey in the <a href="product" style="color: var(--accent-blue);">Shop</a>.
+                    </div>
+                    <div id="orderList">
+                        <!-- Simulated orders will go here -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎓 Learning Progress</h2>
+                    <p style="opacity: 0.6;">You are currently enrolled in <b>0 courses</b>. Join more to see your progress tracks here.</p>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="card">
+                    <h2>🛒 Current Cart</h2>
+                    <div id="cartContent">
+                        <!-- Inject cart -->
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <a href="buyform" class="btn-access" style="background: var(--accent-blue); color: #fff; display: block; text-align: center; padding: 12px;">PROCEED TO CHECKOUT</a>
+                    </div>
+                </div>
+
+                <div class="card" style="background: rgba(185, 4, 4, 0.05); border-color: rgba(185, 4, 4, 0.2);">
+                    <h3>Support</h3>
+                    <p style="font-size: 14px; margin-top: 10px; opacity: 0.8;">Need help with your downloads? Contact our premium student support.</p>
+                    <a href="contact" style="display: block; margin-top: 15px; color: var(--marketing-red); font-weight: 700; text-decoration: none;">GET HELP →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products_db = {
+            'masterclass': { name: 'Netixa Masterclass Reservation', price: 9, icon: '🚀' },
+            'ebook': { name: 'Ultimate Digital Career Mastery E-Book', price: 499, icon: '📘' },
+            'templates': { name: '100+ High-Converting Landing Pages', price: 799, icon: '🎨' },
+            'email': { name: 'Email Automation Workflows', price: 299, icon: '⚙️' },
+            'roadmap': { name: 'The Digital Freelance Roadmap', price: 199, icon: '🗺️' }
+        };
+
+        // AUTH CHECK
+        const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+        if (auth.role !== 'student') {
+            window.location.href = 'login';
+        }
+
+        document.getElementById('welcomeTitle').innerText = `Welcome, ${auth.email.split('@')[0]}!`;
+        document.getElementById('userInitial').innerText = auth.email.charAt(0).toUpperCase();
+
+        function logout() {
+            localStorage.removeItem('netixa_auth');
+            window.location.href = 'login';
+        }
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            const container = document.getElementById('cartContent');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="opacity: 0.5; text-align: center;">Cart is empty</p>';
+                return;
+            }
+
+            container.innerHTML = cart.map(id => {
+                const p = products_db[id];
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-icon">${p.icon}</div>
+                        <div class="cart-item-details">
+                            <b>${p.name}</b>
+                            <span>₹${p.price}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderOrders() {
+            // Simulated: In a real app we'd fetch this. 
+            // For now, let's see if there's an 'orders' key in localStorage
+            const orders = JSON.parse(localStorage.getItem('netixa_orders') || '[]');
+            const container = document.getElementById('orderList');
+            const placeholder = document.getElementById('noOrders');
+
+            if (orders.length > 0) {
+                placeholder.style.display = 'none';
+                container.innerHTML = orders.map(order => `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <b>${order.productName}</b>
+                            <span>Purchased on ${order.date}</span>
+                        </div>
+                        <a href="#" class="btn-access">DOWNLOAD</a>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = () => {
+            renderCart();
+            renderOrders();
+        };
+    </script>
+</body>
+</html>

@@ -183,6 +183,15 @@
             'roadmap': { name: 'The Digital Freelance Roadmap', price: 199, icon: '🗺️' }
         };
 
+        const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+        if (auth.email) {
+            window.onload = () => {
+                renderCart();
+                document.getElementById('email').value = auth.email;
+                // If it's a student, we can assume they have a name in profile later
+            };
+        }
+
         const leadForm = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
         let totalAmount = 0;
@@ -249,6 +258,22 @@
                 "description": "Order for Digital Career Vault",
                 "image": "mentor.png",
                 "handler": function (response){
+                    // Save to user history if logged in
+                    if (auth.role === 'student') {
+                        let orders = JSON.parse(localStorage.getItem('netixa_orders') || '[]');
+                        let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+                        if (cart.length === 0) cart = ['masterclass'];
+                        
+                        cart.forEach(id => {
+                            orders.push({
+                                productName: products_db[id].name,
+                                date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                                paymentId: response.razorpay_payment_id
+                            });
+                        });
+                        localStorage.setItem('netixa_orders', JSON.stringify(orders));
+                    }
+
                     // Clear cart on success
                     localStorage.removeItem('netixa_cart');
                     window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;

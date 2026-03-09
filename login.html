@@ -145,13 +145,19 @@
             const password = document.getElementById('password').value;
             const error = document.getElementById('error');
 
-            // SIMPLE AUTH LOGIC (Can be replaced with Worker API later)
             if (email === 'admin@netixa.tech' && password === 'admin123') {
-                localStorage.setItem('netixa_admin', 'authenticated');
+                localStorage.setItem('netixa_auth', JSON.stringify({ email, role: 'admin' }));
                 window.location.href = 'dashboard';
             } else {
-                error.style.display = 'block';
-                setTimeout(() => error.style.display = 'none', 3000);
+                // For demo/simulated user login
+                if (password.length >= 6) {
+                    localStorage.setItem('netixa_auth', JSON.stringify({ email, role: 'student' }));
+                    window.location.href = 'user-dashboard';
+                } else {
+                    error.style.display = 'block';
+                    error.innerText = "Password must be at least 6 characters.";
+                    setTimeout(() => error.style.display = 'none', 3000);
+                }
             }
         });
     </script>

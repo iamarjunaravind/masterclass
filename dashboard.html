@@ -264,12 +264,13 @@
 
     <script>
         // AUTH CHECK
-        if (localStorage.getItem('netixa_admin') !== 'authenticated') {
+        const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+        if (auth.role !== 'admin') {
             window.location.href = 'login';
         }
 
         function logout() {
-            localStorage.removeItem('netixa_admin');
+            localStorage.removeItem('netixa_auth');
             window.location.href = 'login';
         }
 
