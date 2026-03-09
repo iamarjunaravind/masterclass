@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Netixa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1e0a3d;
+            --marketing-red: #b90404;
+            --blue-accent: #2563eb;
+            --text-main: #111827;
+            --text-secondary: #4b5563;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { 
+            background: #0f0a1f;
+            color: #fff; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .logo {
+            font-family: 'Outfit';
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+        }
+        h1 {
+            font-family: 'Outfit';
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: rgba(255,255,255,0.8);
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            font-size: 15px;
+            color: #fff;
+            transition: 0.3s;
+            outline: none;
+        }
+        input:focus {
+            border-color: var(--blue-accent);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--blue-accent), #6333ff);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Outfit';
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 51, 255, 0.3);
+            filter: brightness(1.1);
+        }
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">NETIXA</div>
+        <h1>Admin Control Panel</h1>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Admin Email</label>
+                <input type="email" id="email" placeholder="admin@netixa.tech" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-login">SIGN IN →</button>
+            <div id="error" class="error-msg">Invalid credentials. Please try again.</div>
+        </form>
+
+        <a href="index" class="back-link">← Return to Website</a>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const error = document.getElementById('error');
+
+            // SIMPLE AUTH LOGIC (Can be replaced with Worker API later)
+            if (email === 'admin@netixa.tech' && password === 'admin123') {
+                localStorage.setItem('netixa_admin', 'authenticated');
+                window.location.href = 'dashboard';
+            } else {
+                error.style.display = 'block';
+                setTimeout(() => error.style.display = 'none', 3000);
+            }
+        });
+    </script>
+</body>
+</html>
