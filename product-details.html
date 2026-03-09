@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | Netixa Digital Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1e0a3d;
+            --marketing-red: #b90404;
+            --primary-bg: #ffffff;
+            --light-gray: #f8f9fa;
+            --border-light: #e9ecef;
+            --blue-accent: #2563eb;
+            --purple-glow: #6333ff;
+            --text-main: #111827;
+            --text-secondary: #4b5563;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--primary-bg); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 25px; }
+
+        /* HEADER */
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            background: #fcfcfc;
+            border-bottom: 2px solid #f0f0f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header .container { display: flex; justify-content: space-between; align-items: center; }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        /* PRODUCT DETAIL SECTION */
+        .product-detail {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .product-visuals {
+            position: sticky;
+            top: 120px;
+        }
+
+        .product-image-container {
+            background: var(--light-gray);
+            border-radius: 30px;
+            padding: 60px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+            font-size: 120px;
+            line-height: 1;
+        }
+
+        .product-info h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            line-height: 1.1;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--blue-accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .price-box {
+            margin: 30px 0;
+            padding: 25px;
+            background: #fcfcfc;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .current-price {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        .original-price {
+            font-size: 18px;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .discount-badge {
+            background: var(--marketing-red);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .product-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .features-list li {
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-add-cart {
+            flex-grow: 1;
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            text-align: center;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-buy-now {
+            flex-grow: 1;
+            background: var(--marketing-red);
+            color: #fff;
+            padding: 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            text-align: center;
+            font-size: 16px;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(185, 4, 4, 0.2);
+        }
+
+        .btn-add-cart:hover { opacity: 0.9; transform: translateY(-3px); }
+        .btn-buy-now:hover { background: #ff2525; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(185, 4, 4, 0.3); }
+
+        /* REVIEWS */
+        .reviews-section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .review-card {
+            padding: 30px;
+            background: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stars { color: var(--gold); margin-bottom: 10px; }
+
+        @media (max-width: 900px) {
+            .product-detail { grid-template-columns: 1fr; gap: 40px; }
+            .product-visuals { position: static; }
+            .action-row { flex-direction: column; }
+        }
+
+        /* CART FLOATER */
+        .cart-floater {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-dark);
+            color: #fff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transition: 0.3s;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--marketing-red);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+        }
+
+        footer { background: #111; padding: 60px 0; color: #fff; text-align: center; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index" class="logo-text">NETIXA</a>
+            <a href="product" style="text-decoration: none; font-weight: 700; color: var(--blue-accent); font-size: 14px;">← Back to Shop</a>
+        </div>
+    </header>
+
+    <main class="container" id="productContent">
+        <!-- Content will be injected by JavaScript -->
+        <div style="padding: 100px 0; text-align: center;">
+            <p>Loading product details...</p>
+        </div>
+    </main>
+
+    <div class="cart-floater" onclick="window.location.href='buyform'">
+        🛒
+        <div class="cart-count" id="cartCount">0</div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 NETIXA EDUCATION. ALL ASSETS PROTECTED.</p>
+        </div>
+    </footer>
+
+    <script shadow>
+        const products = {
+            'ebook': {
+                name: 'Ultimate Digital Career Mastery E-Book',
+                category: 'Education / Strategy',
+                icon: '📘',
+                price: 499,
+                oldPrice: 1999,
+                description: 'The complete blueprint for building a high-income digital career from scratch in 2026. This comprehensive guide covers everything from niche selection to high-ticket closing.',
+                features: ['20+ In-depth Case Studies', '2026 Salary Benchmarks', 'Recruiter Outreach Templates', 'Lifetime Updates Included']
+            },
+            'templates': {
+                name: '100+ High-Converting Landing Pages',
+                category: 'Design / UI/UX',
+                icon: '🎨',
+                price: 799,
+                oldPrice: 2499,
+                description: 'Professional, mobile-optimized landing page templates designed for maximum conversion. Includes source files for Framer, Webflow, and WordPress.',
+                features: ['Optimized for Mobile/Tablet', 'A/B Tested Layouts', 'SEO Friendly Structure', 'Easy 1-Click Installation']
+            },
+            'email': {
+                name: 'Email Automation Workflows',
+                category: 'Marketing / Automation',
+                icon: '⚙️',
+                price: 299,
+                oldPrice: 1499,
+                description: 'Pre-configured email marketing workflows that run on autopilot. From welcome sequences to re-engagement campaigns, we have you covered.',
+                features: ['Mailchimp & Klaviyo Ready', 'High-Open Rate Subject Lines', 'Lead Magnet Sequences', 'Complete Setup Guide']
+            },
+            'roadmap': {
+                name: 'The Digital Freelance Roadmap',
+                category: 'Career / Growth',
+                icon: '🗺️',
+                price: 199,
+                oldPrice: 999,
+                description: 'Stop guessing and start getting results. This roadmap provides a clear path from your first ₹10k to a sustainable ₹1 Lakh+ monthly income.',
+                features: ['Interactive PDF Checklist', 'Client Acquisition Tracker', 'Pricing Strategy Guide', 'Weekly Progress Tracker']
+            }
+        };
+
+        function getProductId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        function renderProduct() {
+            const id = getProductId();
+            const product = products[id];
+            const container = document.getElementById('productContent');
+
+            if (!product) {
+                container.innerHTML = `<div style="padding:100px 0; text-align:center;"><h1>Product Not Found</h1><a href="product">Return to shop</a></div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="product-detail">
+                    <div class="product-visuals">
+                        <div class="product-image-container">${product.icon}</div>
+                    </div>
+                    <div class="product-info">
+                        <span class="category-badge">${product.category}</span>
+                        <h1>${product.name}</h1>
+                        <p class="product-description">${product.description}</p>
+                        
+                        <div class="price-box">
+                            <div class="current-price">₹${product.price}</div>
+                            <div class="original-price">₹${product.oldPrice}</div>
+                            <div class="discount-badge">${Math.round((1 - product.price/product.oldPrice) * 100)}% OFF</div>
+                        </div>
+
+                        <ul class="features-list">
+                            ${product.features.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+
+                        <div class="action-row">
+                            <button class="btn-add-cart" onclick="addToCart('${id}')">ADD TO CART</button>
+                            <a href="buyform" class="btn-buy-now">BUY IT NOW</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-section">
+                    <span class="category-badge" style="background:rgba(0,0,0,0.05); color:#666;">Verified Purchase Reviews</span>
+                    <h2 style="font-family:'Outfit'; font-weight:800; margin:20px 0 40px;">What our students say</h2>
+                    
+                    <div class="review-card">
+                        <div class="stars">★★★★★</div>
+                        <p style="font-weight:700; margin-bottom:10px;">Transformation in 3 weeks!</p>
+                        <p style="color:var(--text-secondary); font-size:15px;">"Exactly what I needed. The level of detail in this ${product.name} is insane. Worth every paisa."</p>
+                        <p style="margin-top:15px; font-size:12px; font-weight:800;">- ARJUN S.</p>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="stars">★★★★★</div>
+                        <p style="font-weight:700; margin-bottom:10px;">Best budget investment</p>
+                        <p style="color:var(--text-secondary); font-size:15px;">"Can't believe the value given for this price. Netixa team always overdelivers."</p>
+                        <p style="margin-top:15px; font-size:12px; font-weight:800;">- SARA K.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // CART LOGIC
+        function addToCart(id) {
+            let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            if (!cart.includes(id)) {
+                cart.push(id);
+                localStorage.setItem('netixa_cart', JSON.stringify(cart));
+                updateCartCount();
+                alert('Success! Added to your cart.');
+            } else {
+                alert('This item is already in your cart.');
+            }
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            document.getElementById('cartCount').innerText = cart.length;
+        }
+
+        window.onload = () => {
+            renderProduct();
+            updateCartCount();
+        };
+    </script>
+</body>
+</html>

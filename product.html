@@ -252,7 +252,10 @@
                     <p>The complete blueprint for building a high-income digital career from scratch in 2026. Includes 20+ case studies.</p>
                     <div class="price-row">
                         <div class="price"><span class="old-price">₹1,999</span>₹499</div>
-                        <a href="buyform" class="btn-buy">GET ACCESS</a>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <a href="product-details?id=ebook" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                        <button onclick="addToCart('ebook')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
@@ -264,7 +267,10 @@
                     <p>Copy-and-paste templates for WordPress, Framer, and Webflow designed to convert traffic into revenue.</p>
                     <div class="price-row">
                         <div class="price"><span class="old-price">₹2,499</span>₹799</div>
-                        <a href="buyform" class="btn-buy">GET ACCESS</a>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <a href="product-details?id=templates" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                        <button onclick="addToCart('templates')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
@@ -276,7 +282,10 @@
                     <p>Pre-built sequences for welcome series, abandoned carts, and re-engagement. Compatible with Mailchimp & Klaviyo.</p>
                     <div class="price-row">
                         <div class="price"><span class="old-price">₹1,499</span>₹299</div>
-                        <a href="buyform" class="btn-buy">GET ACCESS</a>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <a href="product-details?id=email" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                        <button onclick="addToCart('email')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
@@ -288,12 +297,20 @@
                     <p>A step-by-step checklist to take you from a solo freelancer to a digital agency owner. No fluff, just strategy.</p>
                     <div class="price-row">
                         <div class="price"><span class="old-price">₹999</span>₹199</div>
-                        <a href="buyform" class="btn-buy">GET ACCESS</a>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <a href="product-details?id=roadmap" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                        <button onclick="addToCart('roadmap')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <div class="cart-floater" onclick="window.location.href='buyform'" style="position: fixed; bottom: 30px; right: 30px; background: var(--primary-dark); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 1001; transition: 0.3s;">
+        🛒
+        <div id="cartCount" style="position: absolute; top: -5px; right: -5px; background: var(--marketing-red); color: #fff; font-size: 12px; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff;">0</div>
+    </div>
 
     <footer>
         <div class="container">
@@ -307,5 +324,52 @@
             <p style="font-size: 12px; color: rgba(255,255,255,0.4);">© 2026 NETIXA EDUCATION. ALL ASSETS PROTECTED.</p>
         </div>
     </footer>
+
+    <script>
+        // CART LOGIC
+        function addToCart(id) {
+            let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            if (!cart.includes(id)) {
+                cart.push(id);
+                localStorage.setItem('netixa_cart', JSON.stringify(cart));
+                updateCartCount();
+                showNotification('Success! Added to your cart.');
+            } else {
+                showNotification('This item is already in your cart.', true);
+            }
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            const countElement = document.getElementById('cartCount');
+            if (countElement) countElement.innerText = cart.length;
+        }
+
+        function showNotification(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.innerText = msg;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                right: 30px;
+                background: ${isError ? '#ef4444' : '#10b981'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 700;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                z-index: 2000;
+                animation: slideUp 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        const style = document.createElement('style');
+        style.innerText = '@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }';
+        document.head.appendChild(style);
+
+        window.onload = updateCartCount;
+    </script>
 </body>
 </html>
