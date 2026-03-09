@@ -124,8 +124,12 @@
 <body>
     <div class="form-container">
         <div class="logo">NETIXA</div>
-        <h1>Reserve Your Special ₹9 Spot 🚀</h1>
+        <h1 id="checkoutTitle">Checkout Summary</h1>
         
+        <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: #fcfcfc; border: 1px solid #eee; border-radius: 16px;">
+            <!-- Cart items will be injected here -->
+        </div>
+
         <form id="leadForm">
             <div class="input-group">
                 <label for="name">Full Name</label>
@@ -147,7 +151,7 @@
                 <input type="text" id="city" name="entry.1678080981" placeholder="Kerala / Kozhikode" required>
             </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn">YES, RESERVE MY SPOT NOW! →</button>
+            <button type="submit" class="btn-submit" id="submitBtn">PAY & COMPLETE ORDER →</button>
         </form>
 
         <!-- Hidden Iframe for Google Form background submission -->
@@ -171,8 +175,52 @@
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        const products_db = {
+            'masterclass': { name: 'Netixa Masterclass Reservation', price: 9, icon: '🚀' },
+            'ebook': { name: 'Ultimate Digital Career Mastery E-Book', price: 499, icon: '📘' },
+            'templates': { name: '100+ High-Converting Landing Pages', price: 799, icon: '🎨' },
+            'email': { name: 'Email Automation Workflows', price: 299, icon: '⚙️' },
+            'roadmap': { name: 'The Digital Freelance Roadmap', price: 199, icon: '🗺️' }
+        };
+
         const leadForm = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
+        let totalAmount = 0;
+
+        function renderCart() {
+            let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            // If cart is empty, add the masterclass by default (as it was before)
+            if (cart.length === 0) {
+                cart = ['masterclass'];
+            }
+
+            const summaryEl = document.getElementById('cartSummary');
+            summaryEl.innerHTML = '';
+            totalAmount = 0;
+
+            cart.forEach(id => {
+                const p = products_db[id];
+                if (p) {
+                    totalAmount += p.price;
+                    summaryEl.innerHTML += `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <span style="font-size: 20px;">${p.icon}</span>
+                                <div style="font-size: 13px; font-weight: 700; color: var(--primary-dark);">${p.name}</div>
+                            </div>
+                            <div style="font-weight: 800; color: var(--marketing-red);">₹${p.price}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            summaryEl.innerHTML += `
+                <div style="border-top: 2px dashed #eee; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between;">
+                    <div style="font-weight: 800; font-family: 'Outfit';">TOTAL</div>
+                    <div style="font-weight: 900; font-size: 20px; color: var(--primary-dark);">₹${totalAmount}</div>
+                </div>
+            `;
+        }
 
         leadForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -193,21 +241,17 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Opening Payment Window...';
 
-            // RAZORPAY CONFIGURATION
-            // IMPORTANT: Replace 'YOUR_RAZORPAY_KEY_ID' with your actual Key ID from Razorpay Dashboard
             const options = {
-                "key": "rzp_live_SOdqFD6JoEcac2", // Enter the Key ID generated from the Dashboard
-                "amount": "900", // Amount is in currency subunits. Default currency is INR. Hence, 900 paise = ₹9
+                "key": "rzp_live_SOdqFD6JoEcac2",
+                "amount": totalAmount * 100, // Dynamic total in paise
                 "currency": "INR",
                 "name": "NETIXA EDUCATION",
-                "description": "Masterclass 2026 Reservation",
-                "image": "mentor.png", // Optional: Path to your logo
+                "description": "Order for Digital Career Vault",
+                "image": "mentor.png",
                 "handler": function (response){
-                    // ON SUCCESS
-                    // Redirect to success page with payment ID
+                    // Clear cart on success
+                    localStorage.removeItem('netixa_cart');
                     window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
-                    
-                    // Note: You can also send the lead data + payment ID to your own server or Google Sheet here via fetch()
                 },
                 "prefill": {
                     "name": name,
@@ -216,15 +260,16 @@
                 },
                 "notes": {
                     "location": city,
-                    "source": "Masterclass Website"
+                    "source": "Masterclass Website",
+                    "cart": localStorage.getItem('netixa_cart') || 'masterclass'
                 },
                 "theme": {
-                    "color": "#1e0a3d" // Matching your primary dark color
+                    "color": "#1e0a3d"
                 },
                 "modal": {
                     "ondismiss": function(){
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'YES, RESERVE MY SPOT NOW! →';
+                        submitBtn.textContent = 'PAY & COMPLETE ORDER →';
                     }
                 }
             };
@@ -234,11 +279,13 @@
             rzp1.on('payment.failed', function (response){
                 alert("Payment Failed: " + response.error.description);
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'YES, RESERVE MY SPOT NOW! →';
+                submitBtn.textContent = 'PAY & COMPLETE ORDER →';
             });
 
             rzp1.open();
         });
+
+        window.onload = renderCart;
     </script>
 </body>
 </html>
