@@ -1,0 +1,13 @@
+# IDE / System files
+.gemini/
+.agents/
+.agent/
+_agents/
+_agent/
+brain/
+.DS_Store
+Thumbs.db
+
+# Temp files
+tmp/
+*.log

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserve Your Spot | Netixa Masterclass</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1e0a3d;
+            --marketing-red: #b90404;
+            --blue-accent: #2563eb;
+            --purple-glow: #6333ff;
+            --text-main: #111827;
+            --text-secondary: #4b5563;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            color: var(--text-main); 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 500px;
+            width: 100%;
+            background: #fff;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .form-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--marketing-red), var(--purple-glow));
+        }
+        .logo {
+            font-family: 'Outfit';
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        h1 {
+            font-family: 'Outfit';
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: 0.3s;
+            outline: none;
+        }
+        input:focus {
+            border-color: var(--blue-accent);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.1);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--marketing-red);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit';
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(185, 4, 4, 0.2);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(185, 4, 4, 0.3);
+            background: #d40000;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 25px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .back-link:hover { color: var(--text-main); }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="logo">NETIXA</div>
+        <h1>Reserve Your Special ₹9 Spot 🚀</h1>
+        
+        <form id="leadForm">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="entry.1509955695" placeholder="John Doe" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">E-mail Address</label>
+                <input type="email" id="email" name="entry.136054716" placeholder="john@example.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="whatsapp">WhatsApp Number</label>
+                <input type="tel" id="whatsapp" name="entry.1946851346" placeholder="+91 0000000000" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="city">State / City</label>
+                <input type="text" id="city" name="entry.1678080981" placeholder="Kerala / Kozhikode" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">YES, RESERVE MY SPOT NOW! →</button>
+        </form>
+
+        <!-- Hidden Iframe for Google Form background submission -->
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSe4lKcppg4F1xK_W0WRqy8YF8vyKNkD6wYbn8RqxQg002UeHw/formResponse" 
+              method="POST" 
+              id="googleSubmitForm" 
+              target="hidden_iframe" 
+              style="display:none;">
+            <input type="hidden" name="entry.1509955695" id="gName">
+            <input type="hidden" name="entry.136054716" id="gEmail">
+            <input type="hidden" name="entry.1946851346" id="gWhatsapp">
+            <input type="hidden" name="entry.1678080981" id="gCity">
+        </form>
+
+        <a href="index.html" class="back-link">← Cancel and return</a>
+        
+        <p class="footer-note">Secure Payment • Powered by Razorpay • Netixa Masterclass 2026</p>
+    </div>
+
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        const leadForm = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        leadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const city = document.getElementById('city').value;
+
+            // 1. SYNC TO GOOGLE SHEET (Background)
+            document.getElementById('gName').value = name;
+            document.getElementById('gEmail').value = email;
+            document.getElementById('gWhatsapp').value = whatsapp;
+            document.getElementById('gCity').value = city;
+            document.getElementById('googleSubmitForm').submit();
+
+            // 2. PROCEED TO RAZORPAY
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Opening Payment Window...';
+
+            // RAZORPAY CONFIGURATION
+            // IMPORTANT: Replace 'YOUR_RAZORPAY_KEY_ID' with your actual Key ID from Razorpay Dashboard
+            const options = {
+                "key": "rzp_live_SOdqFD6JoEcac2", // Enter the Key ID generated from the Dashboard
+                "amount": "900", // Amount is in currency subunits. Default currency is INR. Hence, 900 paise = ₹9
+                "currency": "INR",
+                "name": "NETIXA EDUCATION",
+                "description": "Masterclass 2026 Reservation",
+                "image": "mentor.png", // Optional: Path to your logo
+                "handler": function (response){
+                    // ON SUCCESS
+                    // Redirect to success page with payment ID
+                    window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
+                    
+                    // Note: You can also send the lead data + payment ID to your own server or Google Sheet here via fetch()
+                },
+                "prefill": {
+                    "name": name,
+                    "email": email,
+                    "contact": whatsapp
+                },
+                "notes": {
+                    "location": city,
+                    "source": "Masterclass Website"
+                },
+                "theme": {
+                    "color": "#1e0a3d" // Matching your primary dark color
+                },
+                "modal": {
+                    "ondismiss": function(){
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'YES, RESERVE MY SPOT NOW! →';
+                    }
+                }
+            };
+
+            const rzp1 = new Razorpay(options);
+            
+            rzp1.on('payment.failed', function (response){
+                alert("Payment Failed: " + response.error.description);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'YES, RESERVE MY SPOT NOW! →';
+            });
+
+            rzp1.open();
+        });
+    </script>
+</body>
+</html>

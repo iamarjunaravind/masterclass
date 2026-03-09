@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Confirmed | Netixa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1e0a3d;
+            --marketing-red: #b90404;
+            --blue-accent: #2563eb;
+            --purple-glow: #6333ff;
+            --text-main: #111827;
+            --text-secondary: #4b5563;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            color: var(--text-main); 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .success-card {
+            max-width: 550px;
+            width: 100%;
+            background: #fff;
+            padding: 60px 40px;
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.12);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .success-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+        .check-icon {
+            width: 80px;
+            height: 80px;
+            background: #ecfdf5;
+            color: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 30px;
+        }
+        h1 {
+            font-family: 'Outfit';
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .order-id {
+            background: var(--light-gray);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--primary-dark);
+            margin-bottom: 40px;
+            display: inline-block;
+            border: 1px dashed #ddd;
+        }
+        .next-steps {
+            text-align: left;
+            background: #fcfcfc;
+            border: 1px solid #eee;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+        .next-steps h3 {
+            font-family: 'Outfit';
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        .next-steps ul {
+            list-style: none;
+        }
+        .next-steps li {
+            font-size: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .next-steps li::before {
+            content: "✨";
+        }
+        .btn-home {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--primary-dark);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-family: 'Outfit';
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 10, 61, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="check-icon">✓</div>
+        <h1>Reservation Confirmed!</h1>
+        <p>Welcome to the 2026 Digital Revolution. Your spot in the Netixa Masterclass has been successfully secured.</p>
+        
+        <div class="order-id" id="paymentIdDisplay">Payment ID: Loading...</div>
+
+        <div class="next-steps">
+            <h3>Finalize Your Onboarding:</h3>
+            <ul>
+                <li style="margin-bottom: 20px;">
+                    <b>Step 1: Join Batch 56 Group</b><br>
+                    <a href="https://chat.whatsapp.com/Caq3K1c7PMVA3K2IoKP7hh" target="_blank" class="btn-home" style="background:#25d366; width:100%; margin-top:10px;">
+                        JOIN BATCH 56 WHATSAPP GROUP 👥
+                    </a>
+                </li>
+                <li>
+                    <b>Step 2: Send Payment Greeting</b><br>
+                    <p style="font-size: 14px; margin-bottom: 10px;">Click below to send your confirmation message to our support team.</p>
+                    <a id="greetBtn" href="#" target="_blank" class="btn-home" style="background:var(--blue-accent); width:100%;">
+                        SAY HI ON WHATSAPP 👋
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <a href="index.html" class="btn-home" style="background:none; color:var(--text-secondary); border:1px solid #ddd;">Back to Home</a>
+        
+        <p style="margin-top: 30px; font-size: 12px; color: #999;">If you have any questions, contact us at clickvesta@gmail.com</p>
+    </div>
+
+    <script>
+        // Get payment ID from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        
+        if (paymentId) {
+            document.getElementById('paymentIdDisplay').textContent = 'Payment ID: ' + paymentId;
+            
+            // Generate WhatsApp Greeting Link
+            const supportNumber = "917736128087";
+            const message = encodeURIComponent(`Hi Netixa! I've just completed my payment for the Masterclass 2026. \n\nMy Payment ID: ${paymentId}\nPlease add me to the training roster!`);
+            document.getElementById('greetBtn').href = `https://wa.me/${supportNumber}?text=${message}`;
+        }
+    </script>
+</body>
+</html>
