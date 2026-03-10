@@ -19,7 +19,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--primary-bg); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
+        body { background-color: #0c0c0c; color: #fff; line-height: 1.5; overflow-x: hidden; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 25px; }
 
@@ -27,12 +27,13 @@
         .header {
             width: 100%;
             padding: 20px 0;
-            background: #fcfcfc;
-            border-bottom: 2px solid #f0f0f0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            background: #111;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             position: sticky;
             top: 0;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
         
         .header .container { display: flex; justify-content: space-between; align-items: center; }
@@ -41,7 +42,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 24px;
             font-weight: 900;
-            color: var(--primary-dark);
+            color: #fff;
             letter-spacing: -0.5px;
             text-transform: uppercase;
             text-decoration: none;
@@ -60,7 +61,7 @@
             font-size: 48px;
             font-weight: 900;
             margin-bottom: 20px;
-            color: var(--primary-dark);
+            color: #fff;
         }
 
         .hero p {
@@ -79,113 +80,129 @@
         }
 
         .product-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            padding: 40px;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
             transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .product-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(99, 51, 255, 0.1);
-            border-color: var(--purple-glow);
-        }
-
-        .product-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--blue-accent), var(--purple-glow));
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .product-card:hover::before {
-            opacity: 1;
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border-color: rgba(255,255,255,0.1);
         }
 
         .product-card .badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--light-gray);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 10px;
+            top: 15px;
+            right: 15px;
+            background: var(--marketing-red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
-            color: var(--blue-accent);
+            color: #fff;
             letter-spacing: 1px;
+            z-index: 2;
         }
 
-        .product-card .icon {
-            font-size: 40px;
+        .product-card .image-container {
+            width: 100%;
+            height: 200px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card .image-container img {
+            max-width: 130%;
+            max-height: 130%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+            transition: 0.5s;
+        }
+
+        .product-card:hover .image-container img {
+            transform: scale(1.1) rotate(-3deg);
         }
 
         .product-card h3 {
             font-family: 'Outfit', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 15px;
-            color: var(--primary-dark);
-        }
-
-        .product-card p {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            flex-grow: 1;
+            color: #fff;
+            opacity: 0.9;
         }
 
         .price-row {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
             margin-top: auto;
         }
 
         .price {
             font-family: 'Outfit', sans-serif;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--text-main);
+            font-size: 42px;
+            font-weight: 800;
+            color: #fff;
+            margin-top: -5px;
         }
 
-        .price .old-price {
-            font-size: 14px;
+        .old-price {
+            font-size: 22px;
             text-decoration: line-through;
-            color: #999;
-            margin-right: 8px;
-            font-weight: 400;
+            color: var(--marketing-red);
+            font-weight: 700;
+            margin-bottom: 2px;
         }
 
         .btn-buy {
             background: var(--marketing-red);
             color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 10px 20px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: 800;
-            font-size: 14px;
+            font-size: 13px;
             transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(185, 4, 4, 0.2);
+            border: none;
+            cursor: pointer;
         }
 
         .btn-buy:hover {
-            background: #ff2525;
-            box-shadow: 0 8px 20px rgba(185, 4, 4, 0.3);
-            transform: scale(1.05);
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
+
+        .bonus-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .bonus-header h2 {
+            font-family: 'Outfit';
+            font-size: 52px;
+            font-weight: 900;
+            color: #fbd304;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-transform: uppercase;
         }
 
         /* FOOTER */
@@ -246,63 +263,73 @@
         </div>
 
         <div class="container">
+            <div class="bonus-header">
+                <h2>🎁 MEGA BONUSES 🎁</h2>
+                <p style="opacity: 0.7; font-size: 18px; margin-top: 10px;">Includes 8 Mega Bonuses (Worth ₹4999) — Absolutely FREE!</p>
+            </div>
+            
             <div class="product-grid">
                 <!-- Product 1 -->
                 <div class="product-card">
-                    <span class="badge">Best Seller</span>
-                    <div class="icon">📘</div>
-                    <h3>Ultimate Digital Career Mastery E-Book</h3>
-                    <p>The complete blueprint for building a high-income digital career from scratch in 2026. Includes 20+ case studies.</p>
-                    <div class="price-row">
-                        <div class="price"><span class="old-price">₹1,999</span>₹499</div>
+                    <span class="badge">MEGA</span>
+                    <div class="image-container">
+                        <img src="cert-bg.png" alt="E-Book">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <a href="product-details?id=ebook" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                    <h3>100,000+ T-shirt Designs</h3>
+                    <div class="price-row">
+                        <div class="old-price">299</div>
+                        <div class="price">FREE</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                        <a href="product-details?id=ebook" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
                         <button onclick="addToCart('ebook')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
                 <div class="product-card">
-                    <span class="badge">Essential</span>
-                    <div class="icon">🎨</div>
-                    <h3>100+ High-Converting Landing Pages</h3>
-                    <p>Copy-and-paste templates for WordPress, Framer, and Webflow designed to convert traffic into revenue.</p>
-                    <div class="price-row">
-                        <div class="price"><span class="old-price">₹2,499</span>₹799</div>
+                    <div class="image-container">
+                        <img src="slider-1.png" alt="Templates">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <a href="product-details?id=templates" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                    <h3>1000+ Anime T-Shirt Design</h3>
+                    <div class="price-row">
+                        <div class="old-price">199</div>
+                        <div class="price">FREE</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                        <a href="product-details?id=templates" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
                         <button onclick="addToCart('templates')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
                 <div class="product-card">
-                    <span class="badge">Automation</span>
-                    <div class="icon">⚙️</div>
-                    <h3>Email Automation Workflows</h3>
-                    <p>Pre-built sequences for welcome series, abandoned carts, and re-engagement. Compatible with Mailchimp & Klaviyo.</p>
-                    <div class="price-row">
-                        <div class="price"><span class="old-price">₹1,499</span>₹299</div>
+                    <div class="image-container">
+                        <img src="slider-2.png" alt="Email">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <a href="product-details?id=email" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                    <h3>50+ Premium Grafftic Style</h3>
+                    <div class="price-row">
+                        <div class="old-price">199</div>
+                        <div class="price">FREE</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                        <a href="product-details?id=email" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
                         <button onclick="addToCart('email')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
 
                 <!-- Product 4 -->
                 <div class="product-card">
-                    <span class="badge">Checklist</span>
-                    <div class="icon">🗺️</div>
-                    <h3>The Digital Freelance Roadmap</h3>
-                    <p>A step-by-step checklist to take you from a solo freelancer to a digital agency owner. No fluff, just strategy.</p>
-                    <div class="price-row">
-                        <div class="price"><span class="old-price">₹999</span>₹199</div>
+                    <div class="image-container">
+                        <img src="mentor.png" alt="Roadmap">
                     </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <a href="product-details?id=roadmap" class="btn-buy" style="background: var(--primary-dark); flex-grow: 1;">DETAILS</a>
+                    <h3>700+ Anime T-shirt Design</h3>
+                    <div class="price-row">
+                        <div class="old-price">199</div>
+                        <div class="price">FREE</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                        <a href="product-details?id=roadmap" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
                         <button onclick="addToCart('roadmap')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
                     </div>
                 </div>
