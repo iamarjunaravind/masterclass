@@ -391,24 +391,80 @@
         </div>
     </footer>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-        // CART LOGIC
+        const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+
+        // Require login before doing anything in the shop
+        function requireLogin() {
+            if (!auth.email) {
+                // Save current page to redirect back after login
+                localStorage.setItem('netixa_redirect', window.location.href);
+                window.location.href = 'login';
+                return false;
+            }
+            return true;
+        }
+
+        // Cart logic (also requires login)
         function addToCart(id) {
+            if (!requireLogin()) return;
             let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
             if (!cart.includes(id)) {
                 cart.push(id);
                 localStorage.setItem('netixa_cart', JSON.stringify(cart));
                 updateCartCount();
-                showNotification('Success! Added to your cart.');
+                showNotification('Added to cart! Go to cart to checkout.');
             } else {
-                showNotification('This item is already in your cart.', true);
+                showNotification('Already in your cart!', true);
             }
+        }
+
+        // Direct Razorpay buy (login required, no form)
+        function buyNow(id, name, price) {
+            if (!requireLogin()) return;
+
+            const priceNum = parseInt(price.replace(/[^0-9]/g, ''));
+            const options = {
+                key: 'rzp_live_SOdqFD6JoEcac2',
+                amount: priceNum * 100,
+                currency: 'INR',
+                name: 'NETIXA EDUCATION',
+                description: name,
+                image: 'mentor.png',
+                handler: function(response) {
+                    // Save order to history
+                    let orders = JSON.parse(localStorage.getItem('netixa_orders') || '[]');
+                    orders.push({
+                        productName: name,
+                        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        paymentId: response.razorpay_payment_id
+                    });
+                    localStorage.setItem('netixa_orders', JSON.stringify(orders));
+                    window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
+                },
+                prefill: {
+                    email: auth.email || '',
+                    name: auth.name || ''
+                },
+                theme: { color: '#b90404' },
+                modal: {
+                    ondismiss: function() {
+                        showNotification('Payment cancelled.', true);
+                    }
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(r) {
+                showNotification('Payment failed: ' + r.error.description, true);
+            });
+            rzp.open();
         }
 
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
-            const countElement = document.getElementById('cartCount');
-            if (countElement) countElement.innerText = cart.length;
+            const el = document.getElementById('cartCount');
+            if (el) el.innerText = cart.length;
         }
 
         function showNotification(msg, isError = false) {
@@ -437,8 +493,6 @@
 
         function renderShopProducts() {
             let products = JSON.parse(localStorage.getItem('netixa_products'));
-            
-            // Set defaults if none exist
             if (!products) {
                 products = [
                     { id: 'ebook', name: '100,000+ T-shirt Designs', price: '₹299', sales: 24, status: 'Active', desc: 'Premium bundle of vector t-shirt designs.', img: 'cert-bg.png' },
@@ -464,7 +518,7 @@
                     </div>
                     <div class="action-buttons">
                         <a href="product-details?id=${p.id}" class="btn-buy">DETAILS</a>
-                        <button onclick="addToCart('${p.id}')" class="btn-buy primary">🛒 ADD</button>
+                        <button onclick="buyNow('${p.id}', '${p.name}', '${p.price}')" class="btn-buy primary">⚡ BUY</button>
                     </div>
                 </div>
             `).join('');
