@@ -1274,6 +1274,14 @@
                     </a>
                     <a href="user-dashboard" style="width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 14px; text-decoration: none;" title="Go to Dashboard">${initial}</a>
                 `;
+                
+                // Update mobile drawer link if it exists
+                const mobileLogin = document.querySelector('.nav-drawer a[href="login"]');
+                if (mobileLogin) {
+                    mobileLogin.href = 'user-dashboard';
+                    mobileLogin.innerHTML = 'My Dashboard 👤';
+                    mobileLogin.style.color = '#fff';
+                }
             }
         }
         
