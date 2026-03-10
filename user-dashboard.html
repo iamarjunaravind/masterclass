@@ -62,6 +62,12 @@
             border-radius: 24px;
             padding: 30px;
             margin-bottom: 30px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .card h2 { font-family: 'Outfit'; font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
@@ -233,10 +239,29 @@
                             <b>${order.productName}</b>
                             <span>Purchased on ${order.date}</span>
                         </div>
-                        <a href="#" class="btn-access">DOWNLOAD</a>
+                        <a href="#" class="btn-access" onclick="triggerDownload('${order.productName}')">DOWNLOAD</a>
                     </div>
                 `).join('');
             }
+        }
+
+        function triggerDownload(name) {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'PREPARING...';
+            btn.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                btn.innerText = 'STARTED';
+                btn.style.background = '#10b981';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = '#fff';
+                    btn.style.color = '#000';
+                    btn.style.opacity = '1';
+                }, 2000);
+            }, 1000);
         }
 
         window.onload = () => {

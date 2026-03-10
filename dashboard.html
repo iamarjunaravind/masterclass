@@ -32,6 +32,8 @@
             font-weight: 900;
             margin-bottom: 50px;
             padding-left: 15px;
+            cursor: pointer;
+            user-select: none;
         }
 
         .nav-item {
@@ -78,10 +80,21 @@
             padding: 30px;
             border-radius: 20px;
             border: 1px solid var(--border);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .stat-card h3 { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
         .stat-card .value { font-family: 'Outfit'; font-size: 32px; font-weight: 800; }
+
+        tr { transition: 0.2s; }
+        tbody tr:hover { background: rgba(255,255,255,0.02); }
 
         /* TABLES */
         .data-card {
@@ -112,6 +125,13 @@
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
         #logoutBtn { margin-top: auto; color: #ff4d4d; }
@@ -124,7 +144,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">NETIXA ADMIN</div>
+        <div class="logo" onclick="showTab('overview')">NETIXA ADMIN</div>
         <div class="nav-item active" onclick="showTab('overview')">📊 Overview</div>
         <div class="nav-item" onclick="showTab('products')">🛍️ Products</div>
         <div class="nav-item" onclick="showTab('orders')">💰 Orders / Leads</div>
@@ -143,15 +163,15 @@
 
         <div id="tab-overview">
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="showTab('orders')">
                     <h3>TOTAL REVENUE</h3>
                     <div class="value">₹12,450</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="showTab('orders')">
                     <h3>TOTAL ORDERS</h3>
                     <div class="value">42</div>
                 </div>
-                <div class="stat-card" style="border-color: var(--accent-blue);">
+                <div class="stat-card" style="border-color: var(--accent-blue);" onclick="showTab('users')">
                     <h3>ACTIVE USERS</h3>
                     <div class="value">158</div>
                 </div>
@@ -169,15 +189,15 @@
                             <th>STATUS</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody id="recentOrdersTable">
+                        <tr onclick="showTab('orders')" style="cursor: pointer;">
                             <td>#ORD-7821</td>
                             <td>Arjun Aravind</td>
                             <td>E-Book + Templates</td>
                             <td>₹1,298</td>
                             <td><span class="badge success">PAID</span></td>
                         </tr>
-                        <tr>
+                        <tr onclick="showTab('orders')" style="cursor: pointer;">
                             <td>#ORD-7819</td>
                             <td>Meera Nair</td>
                             <td>Masterclass Reservation</td>
