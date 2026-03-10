@@ -9,7 +9,7 @@
         :root {
             --primary-dark: #1e0a3d;
             --marketing-red: #b90404;
-            --primary-bg: #ffffff;
+            --primary-bg: #000;
             --light-gray: #f8f9fa;
             --border-light: #e9ecef;
             --blue-accent: #2563eb;
@@ -19,16 +19,16 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--primary-bg); color: var(--text-main); line-height: 1.5; }
+        body { background-color: #000; color: #fff; line-height: 1.5; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 0 25px; }
 
         .header {
             width: 100%;
             padding: 20px 0;
-            background: #fcfcfc;
-            border-bottom: 2px solid #f0f0f0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            background: #111;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             margin-bottom: 50px;
         }
 
@@ -36,7 +36,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 24px;
             font-weight: 900;
-            color: var(--primary-dark);
+            color: #fff;
             letter-spacing: -0.5px;
             text-transform: uppercase;
             text-decoration: none;
@@ -60,7 +60,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 48px;
             font-weight: 900;
-            color: var(--primary-dark);
+            color: #fff;
             margin-bottom: 20px;
             line-height: 1.1;
         }
@@ -73,8 +73,8 @@
         }
 
         .contact-card {
-            background: #fff;
-            border: 1px solid var(--border-light);
+            background: #151515;
+            border: 1px solid rgba(255,255,255,0.05);
             border-radius: 20px;
             padding: 30px;
             transition: 0.3s;
@@ -91,7 +91,7 @@
         .icon-box {
             width: 50px;
             height: 50px;
-            background: var(--light-gray);
+            background: #222;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -105,13 +105,14 @@
             font-size: 20px;
             font-weight: 800;
             margin-bottom: 5px;
-            color: var(--primary-dark);
+            color: #fff;
         }
 
-        .contact-info p { color: var(--text-secondary); font-size: 16px; }
+        .contact-info p { color: rgba(255,255,255,0.6); font-size: 16px; }
 
         .hours-section {
-            background: var(--primary-dark);
+            background: #151515;
+            border: 1px solid rgba(255,255,255,0.05);
             color: #fff;
             padding: 40px;
             border-radius: 24px;
@@ -129,7 +130,7 @@
         footer {
             margin-top: 80px;
             padding: 40px 0;
-            border-top: 1px solid var(--border-light);
+            border-top: 1px solid rgba(255,255,255,0.05);
             text-align: center;
             color: var(--text-secondary);
             font-size: 14px;
@@ -140,14 +141,14 @@
     <header class="header">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="index" class="logo-text">NETIXA</a>
-            <a href="login" style="text-decoration: none; font-weight: 700; color: var(--text-secondary); font-size: 14px;">Login</a>
+            <a href="login" style="text-decoration: none; font-weight: 700; color: rgba(255,255,255,0.6); font-size: 14px;">Login</a>
         </div>
     </header>
 
     <main class="container">
         <a href="index" class="back-link">← Return to Masterclass</a>
         <h1>How Can We Help?</h1>
-        <p style="font-size: 20px; color: var(--text-secondary); margin-bottom: 40px;">Our support team is dedicated to your success. Reach out through any of the channels below.</p>
+        <p style="font-size: 20px; color: rgba(255,255,255,0.6); margin-bottom: 40px;">Our support team is dedicated to your success. Reach out through any of the channels below.</p>
 
         <div class="contact-grid">
             <div class="contact-card">

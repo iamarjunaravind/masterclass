@@ -16,8 +16,8 @@
         }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
         body { 
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
-            color: var(--text-main); 
+            background: #000; 
+            color: #fff; 
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -27,10 +27,11 @@
         .form-container {
             max-width: 500px;
             width: 100%;
-            background: #fff;
+            background: #0c0c0c;
             padding: 40px;
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             position: relative;
             overflow: hidden;
         }
@@ -47,7 +48,7 @@
             font-family: 'Outfit';
             font-size: 28px;
             font-weight: 900;
-            color: var(--primary-dark);
+            color: #fff;
             text-align: center;
             margin-bottom: 20px;
             letter-spacing: -1px;
@@ -68,12 +69,13 @@
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 8px;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.5);
         }
         input, select {
             width: 100%;
             padding: 14px;
-            border: 2px solid #eee;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             font-size: 16px;
             transition: 0.3s;
@@ -118,7 +120,7 @@
             font-weight: 600;
             font-size: 14px;
         }
-        .back-link:hover { color: var(--text-main); }
+        .back-link:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -126,7 +128,7 @@
         <div class="logo">NETIXA</div>
         <h1 id="checkoutTitle">Checkout Summary</h1>
         
-        <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: #fcfcfc; border: 1px solid #eee; border-radius: 16px;">
+        <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
             <!-- Cart items will be injected here -->
         </div>
 
@@ -215,7 +217,7 @@
                         <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <span style="font-size: 20px;">${p.icon}</span>
-                                <div style="font-size: 13px; font-weight: 700; color: var(--primary-dark);">${p.name}</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">${p.name}</div>
                             </div>
                             <div style="font-weight: 800; color: var(--marketing-red);">₹${p.price}</div>
                         </div>
@@ -224,9 +226,9 @@
             });
 
             summaryEl.innerHTML += `
-                <div style="border-top: 2px dashed #eee; margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between;">
-                    <div style="font-weight: 800; font-family: 'Outfit';">TOTAL</div>
-                    <div style="font-weight: 900; font-size: 20px; color: var(--primary-dark);">₹${totalAmount}</div>
+                <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between;">
+                    <div style="font-weight: 800; font-family: 'Outfit'; color: #fff;">TOTAL</div>
+                    <div style="font-weight: 900; font-size: 20px; color: #fff;">₹${totalAmount}</div>
                 </div>
             `;
         }
