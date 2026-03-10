@@ -301,16 +301,16 @@
         <div id="tab-overview">
             <div class="stats-grid">
                 <div class="stat-card" onclick="showTab('orders')">
-                    <h3>TOTAL REVENUE</h3>
-                    <div class="value">₹12,450</div>
-                </div>
-                <div class="stat-card" onclick="showTab('orders')">
                     <h3>TOTAL ORDERS</h3>
-                    <div class="value">42</div>
+                    <div class="value" id="statOrders">—</div>
                 </div>
                 <div class="stat-card" style="border-color: var(--accent-blue);" onclick="showTab('users')">
-                    <h3>ACTIVE USERS</h3>
-                    <div class="value">158</div>
+                    <h3>REGISTERED USERS</h3>
+                    <div class="value" id="statUsers">—</div>
+                </div>
+                <div class="stat-card" style="border-color: #25d366;" onclick="showTab('users')">
+                    <h3>MASTERCLASS SIGNUPS</h3>
+                    <div class="value" id="statMasterclass">—</div>
                 </div>
             </div>
 
@@ -319,28 +319,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ORDER ID</th>
-                            <th>CUSTOMER</th>
+                            <th>DATE</th>
+                            <th>USER EMAIL</th>
                             <th>PRODUCT</th>
                             <th>AMOUNT</th>
                             <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody id="recentOrdersTable">
-                        <tr onclick="showTab('orders')" style="cursor: pointer;">
-                            <td>#ORD-7821</td>
-                            <td>Arjun Aravind</td>
-                            <td>E-Book + Templates</td>
-                            <td>₹1,298</td>
-                            <td><span class="badge success">PAID</span></td>
-                        </tr>
-                        <tr onclick="showTab('orders')" style="cursor: pointer;">
-                            <td>#ORD-7819</td>
-                            <td>Meera Nair</td>
-                            <td>Masterclass Reservation</td>
-                            <td>₹9</td>
-                            <td><span class="badge success">PAID</span></td>
-                        </tr>
+                        <tr><td colspan="5" style="opacity:0.4;text-align:center;padding:30px;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -492,10 +479,30 @@
         // Load stats on page load
         async function loadStats() {
             try {
-                const stats = await apiGet('/stats');
+                const [stats, orders] = await Promise.all([
+                    apiGet('/stats'),
+                    apiGet('/orders')
+                ]);
                 document.getElementById('statUsers').innerText = stats.users || 0;
                 document.getElementById('statOrders').innerText = stats.orders || 0;
                 document.getElementById('statMasterclass').innerText = stats.masterclass || 0;
+
+                // Recent orders on overview
+                const recentTbody = document.getElementById('recentOrdersTable');
+                const recent = orders.slice(0, 5);
+                if (!recent.length) {
+                    recentTbody.innerHTML = '<tr><td colspan="5" style="opacity:0.4;text-align:center;padding:30px;">No orders yet.</td></tr>';
+                } else {
+                    recentTbody.innerHTML = recent.map(o => `
+                        <tr style="cursor:pointer;" onclick="showTab('orders')">
+                            <td>${o.date ? o.date.split('T')[0] : '—'}</td>
+                            <td>${o.user_email}</td>
+                            <td>${o.product_name}</td>
+                            <td style="color:#10b981;font-weight:700;">₹${o.amount || 0}</td>
+                            <td><span class="badge success">PAID</span></td>
+                        </tr>
+                    `).join('');
+                }
             } catch(e) {
                 console.error('Stats load failed', e);
             }
