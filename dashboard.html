@@ -140,6 +140,48 @@
             .stats-grid { grid-template-columns: 1fr; }
             .sidebar { display: none; }
         }
+
+        /* MODAL styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: #1a152e;
+            width: 500px;
+            max-width: 90%;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            position: relative;
+        }
+
+        .modal-card h2 { font-family: 'Outfit'; margin-bottom: 25px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 13px; opacity: 0.6; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -284,6 +326,39 @@
         </div>
     </div>
 
+    <!-- PRODUCT MODAL -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 id="modalTitle">Edit Product</h2>
+            <input type="hidden" id="edit-id">
+            
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="edit-name" placeholder="e.g. Masterclass Reservation">
+            </div>
+
+            <div class="form-group">
+                <label>Price (with currency symbol)</label>
+                <input type="text" id="edit-price" placeholder="₹499">
+            </div>
+
+            <div class="form-group">
+                <label>Image URL / Path</label>
+                <input type="text" id="edit-image" placeholder="mentor.png or https://...">
+            </div>
+
+            <div class="form-group">
+                <label>Description (Optional)</label>
+                <textarea id="edit-desc" rows="3" placeholder="Short description of the product..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-action" onclick="saveProduct()" style="flex: 1;">Save Product</button>
+                <button class="btn-action" onclick="closeModal()" style="background: transparent; border: 1px solid var(--border); flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // AUTH CHECK
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
@@ -316,10 +391,10 @@
             let products = JSON.parse(localStorage.getItem('netixa_products'));
             if (!products) {
                 products = [
-                    { id: 1, name: 'Ultimate E-Book', price: '₹499', sales: 24, status: 'Active' },
-                    { id: 2, name: 'Landing Pages', price: '₹799', sales: 12, status: 'Active' },
-                    { id: 3, name: 'Email Workflows', price: '₹299', sales: 8, status: 'Active' },
-                    { id: 4, name: 'Freelance Roadmap', price: '₹199', sales: 31, status: 'Active' }
+                    { id: 1, name: 'Ultimate E-Book', price: '₹499', sales: 24, status: 'Active', desc: 'Comprehensive guide to digital career mastery.', img: 'cert-bg.png' },
+                    { id: 2, name: 'Landing Pages', price: '₹799', sales: 12, status: 'Active', desc: '100+ high-converting landing page templates.', img: 'slider-1.png' },
+                    { id: 3, name: 'Email Workflows', price: '₹299', sales: 8, status: 'Active', desc: 'Automated email sequences for sales.', img: 'slider-2.png' },
+                    { id: 4, name: 'Freelance Roadmap', price: '₹199', sales: 31, status: 'Active', desc: 'Your path to full-time freelancing.', img: 'mentor.png' }
                 ];
                 localStorage.setItem('netixa_products', JSON.stringify(products));
             }
@@ -327,57 +402,95 @@
             const table = document.getElementById('productTable');
             table.innerHTML = products.map(p => `
                 <tr>
-                    <td>${p.name}</td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:36px; height:36px; background:url('${p.img || 'cert-bg.png'}'); background-size:cover; border-radius:6px; border:1px solid var(--border);"></div>
+                            <div>
+                                <b>${p.name}</b><br>
+                                <span style="font-size:11px; opacity:0.5;">${(p.desc || '').substring(0, 30)}...</span>
+                            </div>
+                        </div>
+                    </td>
                     <td>${p.price}</td>
                     <td>${p.sales}</td>
                     <td><span class="badge success">${p.status}</span></td>
                     <td>
-                        <button class="btn-action" style="background:#444; margin-right:5px;" onclick="editProduct(${p.id})">Edit</button>
+                        <button class="btn-action" style="background:#444; margin-right:5px;" onclick="openProductModal(${p.id})">Edit</button>
                         <button class="btn-action" style="background:#b90404;" onclick="deleteProduct(${p.id})">Delete</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function addProduct() {
-            const name = prompt("Enter product name:");
-            if (!name) return;
-            const price = prompt("Enter price (e.g., ₹499):", "₹");
-            if (!price) return;
+        function openProductModal(id = null) {
+            const modal = document.getElementById('productModal');
+            document.getElementById('edit-id').value = id || '';
+            document.getElementById('modalTitle').innerText = id ? 'Edit Product' : 'Add New Product';
             
-            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                price: price,
-                sales: 0,
-                status: 'Active'
-            };
-            products.push(newProduct);
+            if (id) {
+                const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+                const p = products.find(prod => prod.id === id);
+                if (p) {
+                    document.getElementById('edit-name').value = p.name || '';
+                    document.getElementById('edit-price').value = p.price || '';
+                    document.getElementById('edit-image').value = p.img || '';
+                    document.getElementById('edit-desc').value = p.desc || '';
+                }
+            } else {
+                document.getElementById('edit-name').value = '';
+                document.getElementById('edit-price').value = '';
+                document.getElementById('edit-image').value = '';
+                document.getElementById('edit-desc').value = '';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value;
+            const price = document.getElementById('edit-price').value;
+            const img = document.getElementById('edit-image').value;
+            const desc = document.getElementById('edit-desc').value;
+
+            if (!name || !price) {
+                alert("Name and Price are required!");
+                return;
+            }
+
+            let products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+            
+            if (id) {
+                // UPDATE
+                const index = products.findIndex(p => p.id == id);
+                if (index !== -1) {
+                    products[index] = { ...products[index], name, price, img, desc };
+                }
+            } else {
+                // ADD
+                products.push({
+                    id: Date.now(),
+                    name, price, img, desc,
+                    sales: 0,
+                    status: 'Active'
+                });
+            }
+
             localStorage.setItem('netixa_products', JSON.stringify(products));
+            closeModal();
             renderProducts();
         }
 
-        function editProduct(id) {
-            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            const newName = prompt("Update product name:", product.name);
-            if (!newName) return;
-            const newPrice = prompt("Update price:", product.price);
-            if (!newPrice) return;
-
-            product.name = newName;
-            product.price = newPrice;
-            localStorage.setItem('netixa_products', JSON.stringify(products));
-            renderProducts();
-        }
+        function addProduct() { openProductModal(); }
 
         function deleteProduct(id) {
             if (!confirm("Are you sure you want to delete this product?")) return;
             let products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            products = products.filter(p => p.id !== id);
+            products = products.filter(p => p.id != id);
             localStorage.setItem('netixa_products', JSON.stringify(products));
             renderProducts();
         }
