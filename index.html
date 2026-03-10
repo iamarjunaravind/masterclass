@@ -953,8 +953,130 @@
         </div>
     </div>
 
+    <!-- MASTERCLASS EVENT BANNER -->
+    <div id="masterclassBanner" style="background: linear-gradient(135deg, #0d0d0d 0%, #1a0505 100%); border-top: 1px solid rgba(185,4,4,0.3); border-bottom: 1px solid rgba(185,4,4,0.3); padding: 30px 0;">
+        <div style="max-width: 80%; margin: 0 auto; padding: 0 25px;">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;">
+                <!-- Left: Date + Info -->
+                <div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <span style="background: #b90404; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE</span>
+                        <span style="font-family: 'Outfit'; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px;">Next Masterclass</span>
+                    </div>
+                    <div style="font-family: 'Outfit'; font-size: 26px; font-weight: 900; color: #fff;" id="mcEventTitle">Loading...</div>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px;">LIFE-CHANGING Digital Marketing Masterclass — Join Free</div>
+                </div>
+                <!-- Center: Countdown -->
+                <div style="display: flex; gap: 12px;" id="mcCountdown">
+                    <div style="text-align:center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; min-width: 70px;">
+                        <div id="mcDays" style="font-family:'Outfit'; font-size: 28px; font-weight: 900; color: #fff;">--</div>
+                        <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Days</div>
+                    </div>
+                    <div style="text-align:center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; min-width: 70px;">
+                        <div id="mcHours" style="font-family:'Outfit'; font-size: 28px; font-weight: 900; color: #fff;">--</div>
+                        <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Hours</div>
+                    </div>
+                    <div style="text-align:center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; min-width: 70px;">
+                        <div id="mcMins" style="font-family:'Outfit'; font-size: 28px; font-weight: 900; color: #b90404;">--</div>
+                        <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Mins</div>
+                    </div>
+                    <div style="text-align:center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; min-width: 70px;">
+                        <div id="mcSecs" style="font-family:'Outfit'; font-size: 28px; font-weight: 900; color: #b90404;">--</div>
+                        <div style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Secs</div>
+                    </div>
+                </div>
+                <!-- Right: CTA -->
+                <div id="mcCTA">
+                    <!-- Filled by JS based on login state -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <main class="main-content">
+    <script>
+        (function() {
+            // Determine next masterclass date (10th or 28th every month)
+            function getNextMasterclassDate() {
+                const now = new Date();
+                const day = now.getDate();
+                const m = now.getMonth();
+                const y = now.getFullYear();
+
+                let target;
+                // If day is between 11 and 28 (inclusive), next is 28th this month
+                if (day >= 11 && day <= 27) {
+                    target = new Date(y, m, 28, 10, 0, 0);
+                } else if (day === 28 && now.getTime() < new Date(y, m, 28, 10, 0, 0).getTime()) {
+                    target = new Date(y, m, 28, 10, 0, 0);
+                } else {
+                    // Between 29–end or 1–10: next is 10th
+                    if (day >= 29) {
+                        // Next month 10th
+                        target = new Date(y, m + 1, 10, 10, 0, 0);
+                    } else {
+                        // day <= 10
+                        if (now.getTime() < new Date(y, m, 10, 10, 0, 0).getTime()) {
+                            target = new Date(y, m, 10, 10, 0, 0);
+                        } else {
+                            // Passed 10th of this month, go to 28th
+                            target = new Date(y, m, 28, 10, 0, 0);
+                        }
+                    }
+                }
+                return target;
+            }
+
+            const target = getNextMasterclassDate();
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const dateStr = target.getDate() + ' ' + months[target.getMonth()] + ' ' + target.getFullYear();
+
+            document.getElementById('mcEventTitle').innerText = '🎓 Life-Changing Masterclass — ' + dateStr;
+
+            // Countdown
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const diff = target.getTime() - now;
+                if (diff <= 0) {
+                    document.getElementById('mcDays').innerText = '00';
+                    document.getElementById('mcHours').innerText = '00';
+                    document.getElementById('mcMins').innerText = '00';
+                    document.getElementById('mcSecs').innerText = '00';
+                    return;
+                }
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('mcDays').innerText = String(d).padStart(2,'0');
+                document.getElementById('mcHours').innerText = String(h).padStart(2,'0');
+                document.getElementById('mcMins').innerText = String(m).padStart(2,'0');
+                document.getElementById('mcSecs').innerText = String(s).padStart(2,'0');
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // CTA: show WhatsApp group if not logged in, else show "You're Registered"
+            const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+            const ctaEl = document.getElementById('mcCTA');
+            if (auth.email) {
+                ctaEl.innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="font-size:11px; font-weight:700; color:#10b981; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">✅ You're Registered</div>
+                        <div style="font-size:13px; color:rgba(255,255,255,0.5);">Hello, <b style="color:#fff;">${auth.email}</b></div>
+                        <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" target="_blank" style="display:inline-block;margin-top:10px;background:#25d366;color:#fff;padding:10px 20px;border-radius:10px;font-weight:800;font-size:13px;text-decoration:none;">📲 Join WhatsApp Group</a>
+                    </div>`;
+            } else {
+                ctaEl.innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">Register & Get the WhatsApp Link</div>
+                        <a href="login" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🔐 Sign In to Register</a>
+                        <div style="font-size:11px; color:rgba(255,255,255,0.3);">Already have an account? Sign in to get the WhatsApp group link.</div>
+                    </div>`;
+            }
+        })();
+    </script>
+
+
         <div class="container">
             
             <h2 class="headline-h2">⚡ HOW TO MAKE MONEY WITH DIGITAL MARKETING MASTERCLASS 2026 🌍</h2>
