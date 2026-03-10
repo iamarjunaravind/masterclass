@@ -144,7 +144,7 @@
             right: -300px;
             width: 300px;
             height: 100%;
-            background: #fff;
+            background: #000;
             z-index: 1600;
             padding: 40px;
             transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -164,11 +164,11 @@
 
         .nav-link {
             text-decoration: none;
-            color: var(--text-main);
+            color: #fff;
             font-size: 18px;
             font-weight: 700;
             padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: 0.2s;
         }
 
@@ -790,6 +790,9 @@
 
         /* MOBILE TWEAKS */
         @media screen and (max-width: 600px) {
+            .header {
+                padding: 14px 0 !important;
+            }
             .footer-grid {
                 grid-template-columns: 1fr;
                 text-align: left;
