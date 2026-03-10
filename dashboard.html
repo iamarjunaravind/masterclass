@@ -182,6 +182,66 @@
             gap: 10px;
             margin-top: 30px;
         }
+
+        /* Image Picker Styles */
+        .image-picker-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .image-preview-box {
+            width: 100%;
+            height: 180px;
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: 0.2s;
+        }
+
+        .gallery-item:hover { transform: scale(1.05); }
+        .gallery-item.selected { border-color: var(--accent-blue); }
+
+        .file-upload-btn {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .file-upload-btn:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
@@ -343,8 +403,25 @@
             </div>
 
             <div class="form-group">
-                <label>Image URL / Path</label>
-                <input type="text" id="edit-image" placeholder="mentor.png or https://...">
+                <label>Product Image</label>
+                <div class="image-picker-container">
+                    <div class="image-preview-box" id="imagePreviewBox">
+                        <img src="" id="modalImagePreview" style="display:none;">
+                        <span id="previewPlaceholder" style="opacity:0.3; font-size:12px;">No image selected</span>
+                    </div>
+                    
+                    <div class="gallery-grid" id="galleryGrid">
+                        <!-- Injected -->
+                    </div>
+
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <label class="file-upload-btn" style="flex:1;">
+                            <span>📁 Upload Custom</span>
+                            <input type="file" id="imageUpload" style="display:none;" onchange="handleImageUpload(event)" accept="image/*">
+                        </label>
+                        <input type="text" id="edit-image" placeholder="Image URL/Path" style="flex:1; font-size:12px;" onchange="updateImagePreview(this.value)">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -427,6 +504,13 @@
             document.getElementById('edit-id').value = id || '';
             document.getElementById('modalTitle').innerText = id ? 'Edit Product' : 'Add New Product';
             
+            // Render Gallery
+            const galleryAssets = ['mentor.png', 'cert-bg.png', 'slider-1.png', 'slider-2.png', 'hero-bg.png', 'final-banner.png'];
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = galleryAssets.map(asset => `
+                <div class="gallery-item" onclick="selectGalleryImage('${asset}')" style="background-image:url('${asset}')" data-path="${asset}"></div>
+            `).join('');
+
             if (id) {
                 const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
                 const p = products.find(prod => prod.id === id);
@@ -435,15 +519,54 @@
                     document.getElementById('edit-price').value = p.price || '';
                     document.getElementById('edit-image').value = p.img || '';
                     document.getElementById('edit-desc').value = p.desc || '';
+                    updateImagePreview(p.img);
                 }
             } else {
                 document.getElementById('edit-name').value = '';
                 document.getElementById('edit-price').value = '';
                 document.getElementById('edit-image').value = '';
                 document.getElementById('edit-desc').value = '';
+                updateImagePreview('');
             }
             
             modal.style.display = 'flex';
+        }
+
+        function updateImagePreview(path) {
+            const img = document.getElementById('modalImagePreview');
+            const placeholder = document.getElementById('previewPlaceholder');
+            const items = document.querySelectorAll('.gallery-item');
+            
+            items.forEach(item => {
+                item.classList.toggle('selected', item.getAttribute('data-path') === path);
+            });
+
+            if (path) {
+                img.src = path;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                document.getElementById('edit-image').value = path;
+            } else {
+                img.src = '';
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+                document.getElementById('edit-image').value = '';
+            }
+        }
+
+        function selectGalleryImage(path) {
+            updateImagePreview(path);
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                updateImagePreview(event.target.result);
+            };
+            reader.readAsDataURL(file);
         }
 
         function closeModal() {
