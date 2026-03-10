@@ -84,7 +84,7 @@
         }
 
         @media (max-width: 600px) {
-            .product-grid { grid-template-columns: 1fr; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
             .hero h1 { font-size: 32px; }
             .hero p { font-size: 16px; }
         }
@@ -94,9 +94,17 @@
         }
 
         @media (max-width: 600px) {
-            .product-grid { grid-template-columns: 1fr; gap: 15px; }
+            .product-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
             .hero h1 { font-size: 32px; }
             .hero p { font-size: 16px; }
+            
+            /* Make product cards fit better in 2 columns */
+            .product-card { padding: 10px; }
+            .product-card .image-container { height: 120px; margin-bottom: 10px; }
+            .product-card h3 { font-size: 13px !important; margin-bottom: 5px; }
+            .product-card .price-row .price { font-size: 16px; }
+            .btn-buy { padding: 8px 10px; font-size: 11px; }
+            .product-card .badge { top: 10px; right: 10px; font-size: 8px; padding: 3px 6px; }
         }
 
         .product-card {

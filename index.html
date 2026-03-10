@@ -630,6 +630,13 @@
             gap: 25px;
             margin-top: 40px;
         }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 40px;
+        }
 
         .module-card {
             background: #151515;
@@ -823,7 +830,8 @@
             /* Force 2-column layout with high specificity */
             .software-box .curriculum-grid, 
             main .curriculum-grid,
-            .curriculum-grid {
+            .curriculum-grid,
+            .product-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
                 display: grid !important;
                 gap: 12px !important;
@@ -1037,7 +1045,7 @@
                     <p style="opacity: 0.7; font-size: 18px;">Unlock the most powerful tools in the digital economy.</p>
                 </div>
 
-                <div class="curriculum-grid" style="margin-top: 50px;">
+                <div class="product-grid" style="margin-top: 50px;">
                     <!-- Bonus 1 -->
                     <div class="module-card" style="border-bottom: none;">
                         <span class="module-badge" style="background: #ff4444;">BONUS</span>
