@@ -213,7 +213,7 @@
             <div class="data-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2>Product Inventory</h2>
-                    <button class="btn-action">+ ADD PRODUCT</button>
+                    <button class="btn-action" onclick="addProduct()">+ ADD PRODUCT</button>
                 </div>
                 <table>
                     <thead>
@@ -267,6 +267,7 @@
                             <th>EMAIL</th>
                             <th>ACCESS LEVEL</th>
                             <th>JOINED</th>
+                            <th>ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -275,6 +276,7 @@
                             <td>arjun@example.com</td>
                             <td><span class="badge success">PAID STUDENT</span></td>
                             <td>22 Feb 2026</td>
+                            <td><button class="btn-action" style="background:#444;" onclick="alert('User profile details coming soon!')">View</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -311,13 +313,16 @@
         }
 
         function renderProducts() {
-            // This would naturally come from an API/JSON in a real app
-            const products = [
-                { name: 'Ultimate E-Book', price: '₹499', sales: 24, status: 'Active' },
-                { name: 'Landing Pages', price: '₹799', sales: 12, status: 'Active' },
-                { name: 'Email Workflows', price: '₹299', sales: 8, status: 'Active' },
-                { name: 'Freelance Roadmap', price: '₹199', sales: 31, status: 'Active' }
-            ];
+            let products = JSON.parse(localStorage.getItem('netixa_products'));
+            if (!products) {
+                products = [
+                    { id: 1, name: 'Ultimate E-Book', price: '₹499', sales: 24, status: 'Active' },
+                    { id: 2, name: 'Landing Pages', price: '₹799', sales: 12, status: 'Active' },
+                    { id: 3, name: 'Email Workflows', price: '₹299', sales: 8, status: 'Active' },
+                    { id: 4, name: 'Freelance Roadmap', price: '₹199', sales: 31, status: 'Active' }
+                ];
+                localStorage.setItem('netixa_products', JSON.stringify(products));
+            }
 
             const table = document.getElementById('productTable');
             table.innerHTML = products.map(p => `
@@ -326,9 +331,55 @@
                     <td>${p.price}</td>
                     <td>${p.sales}</td>
                     <td><span class="badge success">${p.status}</span></td>
-                    <td><button class="btn-action" style="background:#444; margin-right:5px;">Edit</button><button class="btn-action" style="background:#b90404;">Delete</button></td>
+                    <td>
+                        <button class="btn-action" style="background:#444; margin-right:5px;" onclick="editProduct(${p.id})">Edit</button>
+                        <button class="btn-action" style="background:#b90404;" onclick="deleteProduct(${p.id})">Delete</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function addProduct() {
+            const name = prompt("Enter product name:");
+            if (!name) return;
+            const price = prompt("Enter price (e.g., ₹499):", "₹");
+            if (!price) return;
+            
+            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+            const newProduct = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                sales: 0,
+                status: 'Active'
+            };
+            products.push(newProduct);
+            localStorage.setItem('netixa_products', JSON.stringify(products));
+            renderProducts();
+        }
+
+        function editProduct(id) {
+            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const newName = prompt("Update product name:", product.name);
+            if (!newName) return;
+            const newPrice = prompt("Update price:", product.price);
+            if (!newPrice) return;
+
+            product.name = newName;
+            product.price = newPrice;
+            localStorage.setItem('netixa_products', JSON.stringify(products));
+            renderProducts();
+        }
+
+        function deleteProduct(id) {
+            if (!confirm("Are you sure you want to delete this product?")) return;
+            let products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('netixa_products', JSON.stringify(products));
+            renderProducts();
         }
     </script>
 </body>
