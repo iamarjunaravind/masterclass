@@ -104,7 +104,13 @@
             .product-card .image-container { height: 120px; margin-bottom: 10px; }
             .product-card h3 { font-size: 13px !important; margin-bottom: 5px; }
             .product-card .price-row .price { font-size: 16px; }
-            .btn-buy { padding: 8px 10px; font-size: 11px; }
+            
+            /* Button specific flex adjustments so they stack nicely inside the squeezed container */
+            .product-card > div[style*="display: flex"] {
+                flex-direction: column !important;
+                gap: 5px !important;
+            }
+            .btn-buy { padding: 6px 8px; font-size: 10px; text-align: center; }
             .product-card .badge { top: 10px; right: 10px; font-size: 8px; padding: 3px 6px; }
         }
 
