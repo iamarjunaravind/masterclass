@@ -371,24 +371,19 @@
 
         <div id="tab-orders" style="display: none;">
             <div class="data-card">
-                <h2>All Sales & Leads</h2>
-                <p style="opacity: 0.6; margin-top: 10px;">Synchronized with Google Sheets Lead Flow.</p>
+                <h2>All Sales &amp; Orders</h2>
+                <p style="opacity: 0.6; margin-top: 10px;">Live from Cloudflare D1 database.</p>
                 <table style="margin-top: 30px;">
                     <thead>
                         <tr>
                             <th>DATE</th>
-                            <th>SOURCE</th>
-                            <th>DETAILS</th>
-                            <th>VALUE</th>
+                            <th>USER EMAIL</th>
+                            <th>PRODUCT</th>
+                            <th>AMOUNT</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>09 Mar 2026</td>
-                            <td>Direct Shop</td>
-                            <td>Templates Download</td>
-                            <td>₹799</td>
-                        </tr>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="4" style="opacity:0.4;text-align:center;padding:30px;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -402,19 +397,13 @@
                         <tr>
                             <th>NAME</th>
                             <th>EMAIL</th>
-                            <th>ACCESS LEVEL</th>
+                            <th>ROLE</th>
                             <th>JOINED</th>
-                            <th>ACTIONS</th>
+                            <th>WHATSAPP</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Arjun Aravind</td>
-                            <td>arjun@example.com</td>
-                            <td><span class="badge success">PAID STUDENT</span></td>
-                            <td>22 Feb 2026</td>
-                            <td><button class="btn-action" style="background:#444;" onclick="alert('User profile details coming soon!')">View</button></td>
-                        </tr>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="5" style="opacity:0.4;text-align:center;padding:30px;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -472,15 +461,84 @@
     </div>
 
     <script>
-        // AUTH CHECK
+        const API = '/api';
+        const token = localStorage.getItem('netixa_token');
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
-        if (auth.role !== 'admin') {
+
+        // Admin auth guard
+        if (auth.role !== 'admin' || !token) {
             window.location.href = 'login';
         }
 
-        function logout() {
+        async function apiGet(path) {
+            const res = await fetch(API + path, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.status === 401 || res.status === 403) {
+                localStorage.removeItem('netixa_token');
+                localStorage.removeItem('netixa_auth');
+                window.location.href = 'login';
+            }
+            return res.json();
+        }
+
+        async function logout() {
+            await fetch(`${API}/logout`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+            localStorage.removeItem('netixa_token');
             localStorage.removeItem('netixa_auth');
             window.location.href = 'login';
+        }
+
+        // Load stats on page load
+        async function loadStats() {
+            try {
+                const stats = await apiGet('/stats');
+                document.getElementById('statUsers').innerText = stats.users || 0;
+                document.getElementById('statOrders').innerText = stats.orders || 0;
+                document.getElementById('statMasterclass').innerText = stats.masterclass || 0;
+            } catch(e) {
+                console.error('Stats load failed', e);
+            }
+        }
+        loadStats();
+
+        async function loadUsersTab() {
+            try {
+                const users = await apiGet('/users');
+                const tbody = document.getElementById('usersTableBody');
+                if (!users.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="opacity:0.4;text-align:center;padding:30px;">No registered users yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = users.map(u => `
+                    <tr>
+                        <td>${u.name || '—'}</td>
+                        <td>${u.email}</td>
+                        <td><span class="badge success">${u.role.toUpperCase()}</span></td>
+                        <td>${u.created_at ? u.created_at.split('T')[0] : '—'}</td>
+                        <td><span style="font-size:12px;opacity:0.5;">${u.whatsapp || '—'}</span></td>
+                    </tr>
+                `).join('');
+            } catch(e) { console.error('Users load failed', e); }
+        }
+
+        async function loadOrdersTab() {
+            try {
+                const orders = await apiGet('/orders');
+                const tbody = document.getElementById('ordersTableBody');
+                if (!orders.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="opacity:0.4;text-align:center;padding:30px;">No orders yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = orders.map(o => `
+                    <tr>
+                        <td>${o.date ? o.date.split('T')[0] : '—'}</td>
+                        <td>${o.user_email}</td>
+                        <td>${o.product_name}</td>
+                        <td style="color:#10b981;font-weight:700;">₹${o.amount || 0}</td>
+                    </tr>
+                `).join('');
+            } catch(e) { console.error('Orders load failed', e); }
         }
 
         function showTab(tabName) {
@@ -488,8 +546,7 @@
             tabs.forEach(t => {
                 document.getElementById('tab-' + t).style.display = (t === tabName) ? 'block' : 'none';
             });
-            
-            // UI Updates
+
             document.getElementById('pageTitle').innerText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.remove('active');
@@ -497,6 +554,8 @@
             });
 
             if (tabName === 'products') renderProducts();
+            if (tabName === 'users') loadUsersTab();
+            if (tabName === 'orders') loadOrdersTab();
         }
 
         function renderProducts() {

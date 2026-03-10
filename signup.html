@@ -200,44 +200,58 @@
     </div>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        const API = '/api';
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const confirm = document.getElementById('confirmPassword').value;
             const error = document.getElementById('error');
+            const btn = document.getElementById('signupBtn');
 
             if (password !== confirm) {
                 error.style.display = 'block';
-                error.innerText = "Passwords do not match!";
+                error.innerText = 'Passwords do not match!';
                 return;
             }
-
             if (password.length < 6) {
                 error.style.display = 'block';
-                error.innerText = "Password must be at least 6 characters.";
+                error.innerText = 'Password must be at least 6 characters.';
                 return;
             }
 
-            // SIMULATED REGISTRATION
-            let users = JSON.parse(localStorage.getItem('netixa_users') || '[]');
-            if (users.find(u => u.email === email)) {
-                error.style.display = 'block';
-                error.innerText = "Email already registered!";
-                return;
-            }
+            btn.innerText = 'Creating Account...';
+            btn.disabled = true;
 
-            users.push({ name, email, password });
-            localStorage.setItem('netixa_users', JSON.stringify(users));
+            try {
+                const res = await fetch(`${API}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
 
-            // Auto Login
-            localStorage.setItem('netixa_auth', JSON.stringify({ name, email, role: 'student' }));
-            
-            document.getElementById('signupBtn').innerText = "Creating Account...";
-            setTimeout(() => {
+                if (!res.ok) {
+                    error.style.display = 'block';
+                    error.innerText = data.error || 'Registration failed.';
+                    btn.innerText = 'CREATE ACCOUNT →';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Store token & user info
+                localStorage.setItem('netixa_token', data.token);
+                localStorage.setItem('netixa_auth', JSON.stringify({ name: data.name, email: data.email, role: data.role }));
                 window.location.href = 'user-dashboard';
-            }, 1000);
+
+            } catch (e) {
+                error.style.display = 'block';
+                error.innerText = 'Network error. Please try again.';
+                btn.innerText = 'CREATE ACCOUNT →';
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
