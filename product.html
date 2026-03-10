@@ -100,25 +100,27 @@
             .hero p { font-size: 16px; }
             
             /* Make product cards fit better in 2 columns */
-            .product-card { padding: 10px; }
-            .product-card .image-container { height: 120px; margin-bottom: 10px; }
-            .product-card h3 { font-size: 13px !important; margin-bottom: 5px; }
-            .product-card .price-row .price { font-size: 16px; }
+            .product-card { padding: 15px; }
+            .product-card .image-container { height: 140px; margin-bottom: 12px; }
+            .product-card h3 { font-size: 11px !important; margin-bottom: 8px; min-height: 30px; }
+            .price-row { margin-bottom: 15px; gap: 2px; }
+            .price-row .old-price { font-size: 12px; }
+            .price-row .new-price { font-size: 15px; }
             
             /* Button specific flex adjustments so they stack nicely inside the squeezed container */
-            .product-card > div[style*="display: flex"] {
+            .action-buttons {
                 flex-direction: column !important;
-                gap: 5px !important;
+                gap: 6px !important;
             }
-            .btn-buy { padding: 6px 8px; font-size: 10px; text-align: center; }
-            .product-card .badge { top: 10px; right: 10px; font-size: 8px; padding: 3px 6px; }
+            .btn-buy { padding: 8px 0; font-size: 11px; margin: 0; }
+            .product-card .badge { top: 10px; left: 10px; right: auto; font-size: 8px; padding: 3px 8px; }
         }
 
         .product-card {
             background: #080808;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 15px;
+            padding: 24px;
             transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex;
             flex-direction: column;
@@ -136,13 +138,13 @@
 
         .product-card .badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 15px;
+            left: 15px;
             right: auto;
             background: var(--marketing-red);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
             color: #fff;
@@ -152,8 +154,8 @@
 
         .product-card .image-container {
             width: 100%;
-            height: 140px;
-            margin-bottom: 12px;
+            height: 180px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -164,7 +166,7 @@
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
             transition: 0.5s;
         }
 
@@ -174,12 +176,12 @@
 
         .product-card h3 {
             font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-size: 16px;
             font-weight: 500;
             line-height: 1.4;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #ccc;
-            min-height: 30px;
+            min-height: 40px;
         }
 
         .price-row {
@@ -187,12 +189,12 @@
             flex-direction: column;
             align-items: center;
             margin-top: auto;
-            margin-bottom: 15px;
-            gap: 2px;
+            margin-bottom: 20px;
+            gap: 4px;
         }
 
         .price-row .old-price {
-            font-size: 12px;
+            font-size: 14px;
             text-decoration: line-through;
             color: #ff3333;
             font-weight: 800;
@@ -200,26 +202,33 @@
 
         .price-row .new-price {
             font-family: 'Outfit', sans-serif;
-            font-size: 15px;
+            font-size: 24px;
             font-weight: 800;
             color: #fff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
         }
 
         .btn-buy {
             background: rgba(255,255,255,0.05);
             color: #fff;
-            padding: 8px 0;
-            border-radius: 6px;
+            padding: 12px 0;
+            border-radius: 8px;
             text-decoration: none;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 13px;
             transition: 0.3s;
             border: 1px solid rgba(255,255,255,0.1);
             cursor: pointer;
             width: 100%;
             display: block;
             text-align: center;
+            flex: 1;
         }
         
         .btn-buy.primary {
@@ -449,7 +458,7 @@
                         <div class="old-price">₹499</div>
                         <div class="new-price">${p.price}</div>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+                    <div class="action-buttons">
                         <a href="product-details?id=${p.id}" class="btn-buy">DETAILS</a>
                         <button onclick="addToCart('${p.id}')" class="btn-buy primary">🛒 ADD</button>
                     </div>
