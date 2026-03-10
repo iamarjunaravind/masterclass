@@ -20,9 +20,46 @@
             color: #fff; 
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        main {
+            display: flex;
             align-items: center;
             justify-content: center;
+            flex-grow: 1;
             padding: 20px;
+            width: 100%;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 25px;
+            width: 100%;
+        }
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            background: #000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            text-decoration: none;
         }
         .form-container {
             max-width: 500px;
@@ -159,9 +196,10 @@
 </style>
 </head>
 <body>
-    <div class="form-container">
-        <div class="logo">NETIXA</div>
-        <h1 id="checkoutTitle">Checkout Summary</h1>
+    <main>
+        <div class="form-container">
+            <div class="logo">NETIXA</div>
+            <h1 id="checkoutTitle">Checkout Summary</h1>
         
         <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
             <!-- Cart items will be injected here -->
@@ -204,10 +242,11 @@
             <input type="hidden" name="entry.1678080981" id="gCity">
         </form>
 
-        <a href="index.html" class="back-link">← Cancel and return</a>
-        
-        <p class="footer-note">Secure Payment • Powered by Razorpay • Netixa Masterclass 2026</p>
-    </div>
+            <a href="index" class="back-link">← Cancel and return</a>
+            
+            <p class="footer-note">Secure Payment • Powered by Razorpay • Netixa Masterclass 2026</p>
+        </div>
+    </main>
 
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
