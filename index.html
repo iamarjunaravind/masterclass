@@ -782,7 +782,7 @@
         .stars { color: var(--gold); font-size: 12px; margin-bottom: 10px; }
 
         /* MOBILE TWEAKS */
-        @media (max-width: 600px) {
+        @media screen and (max-width: 600px) {
             .footer-grid {
                 grid-template-columns: 1fr;
                 text-align: left;
@@ -820,9 +820,17 @@
                 margin-right: 0;
                 width: 100%;
             }
+            /* Force 1-column layout with high specificity */
+            .software-box .curriculum-grid, 
+            main .curriculum-grid,
             .curriculum-grid {
                 grid-template-columns: 1fr !important;
-                gap: 20px;
+                display: grid !important;
+                gap: 20px !important;
+            }
+            .module-card {
+                width: 100% !important;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -835,7 +843,7 @@
                 <div class="logo-text">NETIXA</div>
             </div>
             <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="login" class="nav-link" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: none; @media (min-width: 768px) { display: block; }">Sign In</a>
+                <a href="login" class="nav-link" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;">Sign In</a>
                 <div class="menu-icon" id="menuToggle">
                     <span></span>
                     <span></span>
