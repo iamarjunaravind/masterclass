@@ -468,10 +468,10 @@
             let products = JSON.parse(localStorage.getItem('netixa_products'));
             if (!products) {
                 products = [
-                    { id: 1, name: 'Ultimate E-Book', price: '₹499', sales: 24, status: 'Active', desc: 'Comprehensive guide to digital career mastery.', img: 'cert-bg.png' },
-                    { id: 2, name: 'Landing Pages', price: '₹799', sales: 12, status: 'Active', desc: '100+ high-converting landing page templates.', img: 'slider-1.png' },
-                    { id: 3, name: 'Email Workflows', price: '₹299', sales: 8, status: 'Active', desc: 'Automated email sequences for sales.', img: 'slider-2.png' },
-                    { id: 4, name: 'Freelance Roadmap', price: '₹199', sales: 31, status: 'Active', desc: 'Your path to full-time freelancing.', img: 'mentor.png' }
+                    { id: 'ebook', name: '100,000+ T-shirt Designs', price: '₹299', sales: 24, status: 'Active', desc: 'Premium bundle of vector t-shirt designs.', img: 'cert-bg.png' },
+                    { id: 'templates', name: '1000+ Anime T-Shirt Design', price: '₹199', sales: 12, status: 'Active', desc: 'Curated anime-style high-quality designs.', img: 'slider-1.png' },
+                    { id: 'email', name: '50+ Premium Grafftic Style', price: '₹199', sales: 8, status: 'Active', desc: 'Unique graffiti and street art graphics.', img: 'slider-2.png' },
+                    { id: 'roadmap', name: '700+ Anime T-shirt Design', price: '₹199', sales: 31, status: 'Active', desc: 'Expanded collection of anime-themed apparel art.', img: 'mentor.png' }
                 ];
                 localStorage.setItem('netixa_products', JSON.stringify(products));
             }

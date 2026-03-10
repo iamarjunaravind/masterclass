@@ -27,7 +27,7 @@
         .header {
             width: 100%;
             padding: 20px 0;
-            background: #111;
+            background: #000;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             position: sticky;
@@ -79,6 +79,26 @@
             padding: 40px 0 80px;
         }
 
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+        }
+
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr; gap: 15px; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+        }
+
         .product-card {
             background: #151515;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -104,7 +124,7 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: var(--marketing-red);
+            background: var(--blue-accent);
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 9px;
@@ -264,75 +284,11 @@
 
         <div class="container">
             <div class="bonus-header">
-                <h2>🎁 MEGA BONUSES 🎁</h2>
-                <p style="opacity: 0.7; font-size: 18px; margin-top: 10px;">Includes 8 Mega Bonuses (Worth ₹4999) — Absolutely FREE!</p>
+                <h2>💎 THE DIGITAL VAULT 💎</h2>
             </div>
             
-            <div class="product-grid">
-                <!-- Product 1 -->
-                <div class="product-card">
-                    <span class="badge">MEGA</span>
-                    <div class="image-container">
-                        <img src="cert-bg.png" alt="E-Book">
-                    </div>
-                    <h3>100,000+ T-shirt Designs</h3>
-                    <div class="price-row">
-                        <div class="old-price">299</div>
-                        <div class="price">FREE</div>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
-                        <a href="product-details?id=ebook" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
-                        <button onclick="addToCart('ebook')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="product-card">
-                    <div class="image-container">
-                        <img src="slider-1.png" alt="Templates">
-                    </div>
-                    <h3>1000+ Anime T-Shirt Design</h3>
-                    <div class="price-row">
-                        <div class="old-price">199</div>
-                        <div class="price">FREE</div>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
-                        <a href="product-details?id=templates" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
-                        <button onclick="addToCart('templates')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="product-card">
-                    <div class="image-container">
-                        <img src="slider-2.png" alt="Email">
-                    </div>
-                    <h3>50+ Premium Grafftic Style</h3>
-                    <div class="price-row">
-                        <div class="old-price">199</div>
-                        <div class="price">FREE</div>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
-                        <a href="product-details?id=email" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
-                        <button onclick="addToCart('email')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="product-card">
-                    <div class="image-container">
-                        <img src="mentor.png" alt="Roadmap">
-                    </div>
-                    <h3>700+ Anime T-shirt Design</h3>
-                    <div class="price-row">
-                        <div class="old-price">199</div>
-                        <div class="price">FREE</div>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
-                        <a href="product-details?id=roadmap" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
-                        <button onclick="addToCart('roadmap')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
-                    </div>
-                </div>
+            <div class="product-grid" id="productShopGrid">
+                <!-- Data dynamically loaded from localStorage (netixa_products) -->
             </div>
         </div>
     </main>
@@ -399,7 +355,44 @@
         style.innerText = '@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }';
         document.head.appendChild(style);
 
-        window.onload = updateCartCount;
+        function renderShopProducts() {
+            let products = JSON.parse(localStorage.getItem('netixa_products'));
+            
+            // Set defaults if none exist
+            if (!products) {
+                products = [
+                    { id: 'ebook', name: '100,000+ T-shirt Designs', price: '₹299', sales: 24, status: 'Active', desc: 'Premium bundle of vector t-shirt designs.', img: 'cert-bg.png' },
+                    { id: 'templates', name: '1000+ Anime T-Shirt Design', price: '₹199', sales: 12, status: 'Active', desc: 'Curated anime-style high-quality designs.', img: 'slider-1.png' },
+                    { id: 'email', name: '50+ Premium Grafftic Style', price: '₹199', sales: 8, status: 'Active', desc: 'Unique graffiti and street art graphics.', img: 'slider-2.png' },
+                    { id: 'roadmap', name: '700+ Anime T-shirt Design', price: '₹199', sales: 31, status: 'Active', desc: 'Expanded collection of anime-themed apparel art.', img: 'mentor.png' }
+                ];
+                localStorage.setItem('netixa_products', JSON.stringify(products));
+            }
+
+            const grid = document.getElementById('productShopGrid');
+            if (!grid) return;
+
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="image-container">
+                        <img src="${p.img || 'cert-bg.png'}" alt="${p.name}">
+                    </div>
+                    <h3>${p.name}</h3>
+                    <div class="price-row">
+                        <div class="price">${p.price}</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px; width: 100%;">
+                        <a href="product-details?id=${p.id}" class="btn-buy" style="background: rgba(255,255,255,0.05); flex-grow: 1;">DETAILS</a>
+                        <button onclick="addToCart('${p.id}')" class="btn-buy" style="flex-grow: 1;">🛒 ADD</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = () => {
+            renderShopProducts();
+            updateCartCount();
+        };
     </script>
 </body>
 </html>

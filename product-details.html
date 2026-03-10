@@ -283,53 +283,11 @@
     </footer>
 
     <script shadow>
-        const products = {
-            'ebook': {
-                name: 'Ultimate Digital Career Mastery E-Book',
-                category: 'Education / Strategy',
-                icon: '📘',
-                price: 499,
-                oldPrice: 1999,
-                description: 'The complete blueprint for building a high-income digital career from scratch in 2026. This comprehensive guide covers everything from niche selection to high-ticket closing.',
-                features: ['20+ In-depth Case Studies', '2026 Salary Benchmarks', 'Recruiter Outreach Templates', 'Lifetime Updates Included']
-            },
-            'templates': {
-                name: '100+ High-Converting Landing Pages',
-                category: 'Design / UI/UX',
-                icon: '🎨',
-                price: 799,
-                oldPrice: 2499,
-                description: 'Professional, mobile-optimized landing page templates designed for maximum conversion. Includes source files for Framer, Webflow, and WordPress.',
-                features: ['Optimized for Mobile/Tablet', 'A/B Tested Layouts', 'SEO Friendly Structure', 'Easy 1-Click Installation']
-            },
-            'email': {
-                name: 'Email Automation Workflows',
-                category: 'Marketing / Automation',
-                icon: '⚙️',
-                price: 299,
-                oldPrice: 1499,
-                description: 'Pre-configured email marketing workflows that run on autopilot. From welcome sequences to re-engagement campaigns, we have you covered.',
-                features: ['Mailchimp & Klaviyo Ready', 'High-Open Rate Subject Lines', 'Lead Magnet Sequences', 'Complete Setup Guide']
-            },
-            'roadmap': {
-                name: 'The Digital Freelance Roadmap',
-                category: 'Career / Growth',
-                icon: '🗺️',
-                price: 199,
-                oldPrice: 999,
-                description: 'Stop guessing and start getting results. This roadmap provides a clear path from your first ₹10k to a sustainable ₹1 Lakh+ monthly income.',
-                features: ['Interactive PDF Checklist', 'Client Acquisition Tracker', 'Pricing Strategy Guide', 'Weekly Progress Tracker']
-            }
-        };
-
-        function getProductId() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('id');
-        }
-
         function renderProduct() {
-            const id = getProductId();
-            const product = products[id];
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
+            const product = products.find(p => p.id == id);
             const container = document.getElementById('productContent');
 
             if (!product) {
@@ -337,24 +295,31 @@
                 return;
             }
 
+            // Fallback visuals if not in backend info
+            const iconMap = { 'ebook': '📘', 'templates': '🎨', 'email': '⚙️', 'roadmap': '🗺️' };
+            const categoryMap = { 'ebook': 'Education / Strategy', 'templates': 'Design / UI/UX', 'email': 'Marketing / Automation', 'roadmap': 'Career / Growth' };
+
             container.innerHTML = `
                 <div class="product-detail">
                     <div class="product-visuals">
-                        <div class="product-image-container">${product.icon}</div>
+                        <div class="product-image-container">
+                            ${product.img ? `<img src="${product.img}" style="max-width:100%; height:auto;">` : (iconMap[id] || '📦')}
+                        </div>
                     </div>
                     <div class="product-info">
-                        <span class="category-badge">${product.category}</span>
+                        <span class="category-badge">${categoryMap[id] || 'Digital Product'}</span>
                         <h1>${product.name}</h1>
-                        <p class="product-description">${product.description}</p>
+                        <p class="product-description">${product.desc || 'Premium digital resources for your professional growth.'}</p>
                         
                         <div class="price-box">
-                            <div class="current-price">₹${product.price}</div>
-                            <div class="original-price">₹${product.oldPrice}</div>
-                            <div class="discount-badge">${Math.round((1 - product.price/product.oldPrice) * 100)}% OFF</div>
+                            <div class="current-price">${product.price}</div>
                         </div>
 
                         <ul class="features-list">
-                            ${product.features.map(f => `<li>${f}</li>`).join('')}
+                            <li>Instant Lifetime Access</li>
+                            <li>2026 Updated Content</li>
+                            <li>Mobile & Tablet Optimized</li>
+                            <li>Priority Support Included</li>
                         </ul>
 
                         <div class="action-row">
