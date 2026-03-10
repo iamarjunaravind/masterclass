@@ -186,13 +186,36 @@
         };
 
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
-        if (auth.email) {
-            window.onload = () => {
-                renderCart();
+        
+        window.onload = () => {
+            renderCart();
+            if (auth.email) {
+                // Hide manual input fields
+                const inputs = document.querySelectorAll('.input-group');
+                inputs.forEach(el => el.style.display = 'none');
+                
+                // Pre-fill hidden fields to satisfy form validation/Razorpay
                 document.getElementById('email').value = auth.email;
-                // If it's a student, we can assume they have a name in profile later
-            };
-        }
+                document.getElementById('name').value = auth.name || 'Student Member';
+                document.getElementById('whatsapp').value = '9999999999';
+                document.getElementById('city').value = 'Profile Region';
+
+                // Display a secure fast-checkout message
+                const formElement = document.getElementById('leadForm');
+                const checkMsg = document.createElement('div');
+                checkMsg.innerHTML = `
+                    <div style="background: rgba(37, 99, 235, 0.1); padding: 20px; border-radius: 16px; border: 1px solid rgba(37, 99, 235, 0.3); text-align: center; margin-bottom: 25px;">
+                        <span style="display: block; font-size: 32px; margin-bottom: 15px;">⚡</span>
+                        <h3 style="font-family: 'Outfit'; font-size: 18px; color: #fff; margin-bottom: 5px;">Express Checkout</h3>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 14px;">Billing configured for <br><b style="color: var(--blue-accent);">${auth.email}</b></p>
+                    </div>
+                `;
+                formElement.insertBefore(checkMsg, formElement.firstChild);
+                
+                // Update button text
+                document.getElementById('submitBtn').textContent = 'PAY SECURELY NOW →';
+            }
+        };
 
         const leadForm = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');

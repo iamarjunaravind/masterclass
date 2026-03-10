@@ -795,18 +795,18 @@
                 justify-items: start;
             }
             .main-content { padding: 0; }
-            .container { padding: 0 15px; }
+            .container { padding: 0 10px; }
             .check-strip .container { grid-template-columns: 1fr; gap: 8px; }
             .vault-box { padding: 30px 10px; border-radius: 0; margin-left: 0; margin-right: 0; border-left: none; border-right: none; }
             .bullet-item { margin-left: 0; margin-right: 0; border-radius: 0; border-left: none; border-right: none; }
-            .highlight-text-main { font-size: 30px; }
-            .software-box { border-radius: 0; margin-left: 0; margin-right: 0; border-left: none; border-right: none; }
+            .highlight-text-main { font-size: 28px; }
+            .software-box { border-radius: 0; margin-left: 0; margin-right: 0; border-left: none; border-right: none; padding: 40px 10px; }
             .reality-check { border-radius: 0; margin-left: 0; margin-right: 0; }
             h2.headline-h2 {
                 font-family: 'Outfit', sans-serif;
-                font-size: 26px;
+                font-size: 24px;
                 font-weight: 800;
-                margin-bottom: 30px;
+                margin-bottom: 25px;
                 line-height: 1.2;
             }
             .banner-container, .slider-wrapper {
@@ -820,18 +820,23 @@
                 margin-right: 0;
                 width: 100%;
             }
-            /* Force 1-column layout with high specificity */
+            /* Force 2-column layout with high specificity */
             .software-box .curriculum-grid, 
             main .curriculum-grid,
             .curriculum-grid {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: repeat(2, 1fr) !important;
                 display: grid !important;
-                gap: 20px !important;
+                gap: 12px !important;
             }
             .module-card {
                 width: 100% !important;
-                margin-bottom: 10px;
+                margin-bottom: 0px;
+                padding: 15px !important;
             }
+            .module-card h4 { font-size: 14px !important; }
+            .module-card ul li { font-size: 11px !important; }
+            .module-card .icon { font-size: 30px !important; }
+            .module-badge { top: 10px; right: 10px; font-size: 8px; }
         }
     </style>
 </head>
@@ -843,7 +848,9 @@
                 <div class="logo-text">NETIXA</div>
             </div>
             <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="login" class="nav-link" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;">Sign In</a>
+                <div id="authNavContainer" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login" class="nav-link" id="loginLink" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;">Sign In</a>
+                </div>
                 <div class="menu-icon" id="menuToggle">
                     <span></span>
                     <span></span>
@@ -1251,6 +1258,26 @@
         menuToggle.addEventListener('click', toggleMenu);
         navOverlay.addEventListener('click', toggleMenu);
         navLinks.forEach(link => link.addEventListener('click', toggleMenu));
+    </script>
+    <script>
+        // Check for authenticated user and update navigation if needed
+        function updateAuthNav() {
+            const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+            const authNav = document.getElementById('authNavContainer');
+            
+            if (auth.email) {
+                // User is logged in
+                const initial = auth.email.charAt(0).toUpperCase();
+                authNav.innerHTML = `
+                    <a href="cart" style="color: #fff; text-decoration: none; font-size: 18px; position: relative;" title="View Cart">
+                        🛒
+                    </a>
+                    <a href="user-dashboard" style="width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 14px; text-decoration: none;" title="Go to Dashboard">${initial}</a>
+                `;
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", updateAuthNav);
     </script>
 </body>
 </html>

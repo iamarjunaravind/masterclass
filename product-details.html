@@ -259,7 +259,9 @@
             <a href="index" class="logo-text">NETIXA</a>
             <div style="display: flex; align-items: center; gap: 20px;">
                 <a href="product" style="text-decoration: none; font-weight: 700; color: var(--blue-accent); font-size: 14px;">← Shop</a>
-                <a href="login" style="text-decoration: none; font-weight: 700; color: rgba(255,255,255,0.6); font-size: 14px;">Sign In</a>
+                <div id="authNavContainer" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login" class="nav-link" id="loginLink" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block; text-decoration: none; font-weight: 700;">Sign In</a>
+                </div>
             </div>
         </div>
     </header>
@@ -371,7 +373,22 @@
         window.onload = () => {
             renderProduct();
             updateCartCount();
+            updateAuthNav();
         };
+
+        // Check for authenticated user and update navigation if needed
+        function updateAuthNav() {
+            const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+            const authNav = document.getElementById('authNavContainer');
+            
+            if (auth.email) {
+                // User is logged in
+                const initial = auth.email.charAt(0).toUpperCase();
+                authNav.innerHTML = `
+                    <a href="user-dashboard" style="width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 14px; text-decoration: none;" title="Go to Dashboard">${initial}</a>
+                `;
+            }
+        }
     </script>
 </body>
 </html>
