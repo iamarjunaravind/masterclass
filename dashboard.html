@@ -112,18 +112,23 @@
         }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-bottom: 40px;
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .stat-card {
-            background: linear-gradient(180deg, var(--bg-card), rgba(255,255,255,0.01));
-            padding: 20px;
-            border-radius: 16px;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 12px;
             border: 1px solid var(--border);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 200px;
+            flex: 1;
             transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             position: relative;
             overflow: hidden;
@@ -148,9 +153,9 @@
         .stat-card:hover::before { opacity: 1; }
 
         .stat-card h3 { 
-            font-size: 13px; 
+            font-size: 11px; 
             color: var(--text-muted); 
-            margin-bottom: 15px;
+            margin-bottom: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -158,7 +163,7 @@
         
         .stat-card .value { 
             font-family: 'Outfit'; 
-            font-size: 28px; 
+            font-size: 20px; 
             font-weight: 800; 
             background: linear-gradient(135deg, #fff, #d1d5db);
             -webkit-background-clip: text;
