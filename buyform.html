@@ -251,18 +251,20 @@
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-        const products_db = {
-            'masterclass': { name: 'Netixa Masterclass Reservation', price: 9, icon: '🚀' },
-            'ebook': { name: 'Ultimate Digital Career Mastery E-Book', price: 499, icon: '📘' },
-            'templates': { name: '100+ High-Converting Landing Pages', price: 799, icon: '🎨' },
-            'email': { name: 'Email Automation Workflows', price: 299, icon: '⚙️' },
-            'roadmap': { name: 'The Digital Freelance Roadmap', price: 199, icon: '🗺️' }
-        };
+        const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
+        let products_db = {};
 
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+        const leadForm = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        let totalAmount = 0;
         
-        window.onload = () => {
-            renderCart();
+        window.onload = async () => {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Preparing Checkout...';
+            
+            await renderCart();
+            
             if (auth.email) {
                 // Hide manual input fields
                 const inputs = document.querySelectorAll('.input-group');
@@ -287,15 +289,15 @@
                 formElement.insertBefore(checkMsg, formElement.firstChild);
                 
                 // Update button text
-                document.getElementById('submitBtn').textContent = 'PAY SECURELY NOW →';
+                submitBtn.textContent = 'PAY SECURELY NOW →';
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.textContent = 'PAY & COMPLETE ORDER →';
+                submitBtn.disabled = false;
             }
         };
 
-        const leadForm = document.getElementById('leadForm');
-        const submitBtn = document.getElementById('submitBtn');
-        let totalAmount = 0;
-
-        function renderCart() {
+        async function renderCart() {
             let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
             // If cart is empty, add the masterclass by default (as it was before)
             if (cart.length === 0) {
@@ -303,31 +305,46 @@
             }
 
             const summaryEl = document.getElementById('cartSummary');
-            summaryEl.innerHTML = '';
+            summaryEl.innerHTML = '<div style="text-align:center; padding: 20px; color:rgba(255,255,255,0.5);">Calculating total...</div>';
             totalAmount = 0;
 
-            cart.forEach(id => {
-                const p = products_db[id];
-                if (p) {
-                    totalAmount += p.price;
-                    summaryEl.innerHTML += `
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <span style="font-size: 20px;">${p.icon}</span>
-                                <div style="font-size: 13px; font-weight: 700; color: #fff;">${p.name}</div>
-                            </div>
-                            <div style="font-weight: 800; color: var(--marketing-red);">₹${p.price}</div>
-                        </div>
-                    `;
-                }
-            });
+            try {
+                const res = await fetch(`${API}/products`);
+                if (!res.ok) throw new Error("Failed to load products");
+                const apiProducts = await res.json();
+                
+                products_db = {};
+                apiProducts.forEach(p => {
+                    products_db[p.id] = { name: p.name, price: p.price, icon: p.img || '📦' };
+                });
 
-            summaryEl.innerHTML += `
-                <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between;">
-                    <div style="font-weight: 800; font-family: 'Outfit'; color: #fff;">TOTAL</div>
-                    <div style="font-weight: 900; font-size: 20px; color: #fff;">₹${totalAmount}</div>
-                </div>
-            `;
+                summaryEl.innerHTML = '';
+
+                cart.forEach(id => {
+                    const p = products_db[id];
+                    if (p) {
+                        totalAmount += p.price;
+                        summaryEl.innerHTML += `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <span style="font-size: 20px;">${p.icon}</span>
+                                    <div style="font-size: 13px; font-weight: 700; color: #fff;">${p.name}</div>
+                                </div>
+                                <div style="font-weight: 800; color: var(--marketing-red);">₹${p.price}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                summaryEl.innerHTML += `
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin-top: 15px; padding-top: 15px; display: flex; justify-content: space-between;">
+                        <div style="font-weight: 800; font-family: 'Outfit'; color: #fff;">TOTAL</div>
+                        <div style="font-weight: 900; font-size: 20px; color: #fff;">₹${totalAmount}</div>
+                    </div>
+                `;
+            } catch (e) {
+                summaryEl.innerHTML = '<div style="text-align:center; color:var(--marketing-red);">Error loading prices.</div>';
+            }
         }
 
         leadForm.addEventListener('submit', function(e) {

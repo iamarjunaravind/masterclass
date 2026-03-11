@@ -393,6 +393,7 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
 
         // Require login before doing anything in the shop
@@ -433,15 +434,24 @@
                 description: name,
                 image: 'mentor.png',
                 handler: function(response) {
-                    // Save order to history
-                    let orders = JSON.parse(localStorage.getItem('netixa_orders') || '[]');
-                    orders.push({
-                        productName: name,
-                        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-                        paymentId: response.razorpay_payment_id
-                    });
-                    localStorage.setItem('netixa_orders', JSON.stringify(orders));
-                    window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
+                    if (auth.token) {
+                        fetch(`${API}/orders`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${auth.token}`
+                            },
+                            body: JSON.stringify({
+                                product_name: name,
+                                payment_id: response.razorpay_payment_id,
+                                amount: priceNum
+                            })
+                        }).then(() => {
+                            window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
+                        });
+                    } else {
+                        window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
+                    }
                 },
                 prefill: {
                     email: auth.email || '',
@@ -498,7 +508,7 @@
             grid.innerHTML = '<div style="text-align:center;padding:60px;opacity:0.5;">Loading products...</div>';
 
             try {
-                const res = await fetch('/api/products');
+                const res = await fetch(`${API}/products`);
                 const products = await res.json();
 
                 if (!products.length) {

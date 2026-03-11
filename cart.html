@@ -213,55 +213,80 @@
     </div>
 
     <script>
-        const products_db = {
-            'masterclass': { name: 'Netixa Masterclass Reservation', price: 9, icon: '🚀' },
-            'ebook': { name: 'Ultimate Digital Career Mastery E-Book', price: 499, icon: '📘' },
-            'templates': { name: '100+ High-Converting Landing Pages', price: 799, icon: '🎨' },
-            'email': { name: 'Email Automation Workflows', price: 299, icon: '⚙️' },
-            'roadmap': { name: 'The Digital Freelance Roadmap', price: 199, icon: '🗺️' }
-        };
-
-        function renderCart() {
+        const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
+        async function renderCart() {
             const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
             const listEl = document.getElementById('cartList');
             const footerEl = document.getElementById('cartFooter');
             const emptyEl = document.getElementById('emptyState');
             
-            listEl.innerHTML = '';
+            listEl.innerHTML = '<div style="text-align:center; padding: 40px; color:rgba(255,255,255,0.5);">Loading Cart...</div>';
             
             if (cart.length === 0) {
+                listEl.innerHTML = '';
                 footerEl.style.display = 'none';
                 emptyEl.style.display = 'block';
                 return;
             }
 
-            footerEl.style.display = 'block';
-            emptyEl.style.display = 'none';
-            
-            let total = 0;
-            cart.forEach(id => {
-                const p = products_db[id];
-                if (p) {
-                    total += p.price;
-                    listEl.innerHTML += `
-                        <div class="cart-item">
-                            <div class="item-info">
-                                <span class="item-icon">${p.icon}</span>
-                                <div class="item-details">
-                                    <b>${p.name}</b>
-                                    <span>Instant Access after payment</span>
+            try {
+                // Fetch live product data from DB
+                const res = await fetch(`${API}/products`);
+                if (!res.ok) throw new Error("Failed to load products");
+                const apiProducts = await res.json();
+                
+                // Convert array to dictionary for easy cart lookup
+                const products_db = {};
+                apiProducts.forEach(p => {
+                    products_db[p.id] = { name: p.name, price: p.price, icon: p.img || '📦' };
+                });
+
+                listEl.innerHTML = '';
+                footerEl.style.display = 'block';
+                emptyEl.style.display = 'none';
+                
+                let total = 0;
+                let validCart = [];
+                
+                cart.forEach(id => {
+                    const p = products_db[id];
+                    if (p) {
+                        validCart.push(id);
+                        total += p.price;
+                        listEl.innerHTML += `
+                            <div class="cart-item">
+                                <div class="item-info">
+                                    <span class="item-icon">${p.icon}</span>
+                                    <div class="item-details">
+                                        <b>${p.name}</b>
+                                        <span>Instant Access after payment</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 30px;">
+                                    <div class="item-price">₹${p.price}</div>
+                                    <button class="btn-remove" onclick="removeFromCart('${id}')">Remove</button>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 30px;">
-                                <div class="item-price">₹${p.price}</div>
-                                <button class="btn-remove" onclick="removeFromCart('${id}')">Remove</button>
-                            </div>
-                        </div>
-                    `;
+                        `;
+                    }
+                });
+                
+                // If any items were deleted from DB but remained in cart, update local storage cart to clean them out
+                if (validCart.length !== cart.length) {
+                    localStorage.setItem('netixa_cart', JSON.stringify(validCart));
+                    // If cart becomes empty after cleanup
+                    if (validCart.length === 0) {
+                        listEl.innerHTML = '';
+                        footerEl.style.display = 'none';
+                        emptyEl.style.display = 'block';
+                    }
                 }
-            });
-            
-            document.getElementById('totalValue').innerText = `₹${total}`;
+                
+                document.getElementById('totalValue').innerText = `₹${total}`;
+
+            } catch (e) {
+                listEl.innerHTML = '<div style="text-align:center; padding: 40px; color:var(--marketing-red);">Error loading cart items. Please refresh.</div>';
+            }
         }
 
         function removeFromCart(id) {
