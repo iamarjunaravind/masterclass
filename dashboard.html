@@ -532,20 +532,20 @@
                         <span id="previewPlaceholder" style="opacity:0.3; font-size:12px;">No image selected</span>
                     </div>
                     
-                    <div class="gallery-grid" id="galleryGrid">
-                        <!-- Injected -->
-                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-top: 5px;">
+                        <label style="font-size: 11px; opacity: 0.6; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Select Preset Image</label>
+                        <select id="presetImageSelect" style="width: 100%; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: #fff; outline: none; margin-bottom: 15px; cursor: pointer;" onchange="document.getElementById('edit-image').value = this.value; updateImagePreview(this.value)">
+                            <option value="" style="background: #1a152e;">-- Custom Link / None --</option>
+                            <option value="mentor.png" style="background: #1a152e;">Mentor Thumbnail</option>
+                            <option value="cert-bg.png" style="background: #1a152e;">Certificate Background</option>
+                            <option value="slider-1.png" style="background: #1a152e;">Anime T-Shirts 1</option>
+                            <option value="slider-2.png" style="background: #1a152e;">Anime T-Shirts 2</option>
+                            <option value="hero-bg.png" style="background: #1a152e;">Hero Background</option>
+                            <option value="final-banner.png" style="background: #1a152e;">Masterclass Banner</option>
+                        </select>
 
-                    <div style="display:flex; flex-direction:column; gap:12px; margin-top: 5px;">
-                        <label class="file-upload-btn" style="width:100%;">
-                            <span>📁 Upload from Computer</span>
-                            <input type="file" id="imageUpload" style="display:none;" onchange="handleImageUpload(event)" accept="image/*">
-                        </label>
-                        
-                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
-                            <div style="font-size: 11px; opacity: 0.6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">🔗 Or paste image link</div>
-                            <input type="text" id="edit-image" placeholder="https://example.com/image.png" style="width: 100%; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; color: #fff; outline: none;" onchange="updateImagePreview(this.value)" onkeyup="updateImagePreview(this.value)">
-                        </div>
+                        <div style="font-size: 11px; opacity: 0.6; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">🔗 Or paste image link</div>
+                        <input type="text" id="edit-image" placeholder="https://example.com/image.png" style="width: 100%; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: #fff; outline: none;" onchange="updateImagePreview(this.value); document.getElementById('presetImageSelect').value='';" onkeyup="updateImagePreview(this.value)">
                     </div>
                 </div>
             </div>
@@ -723,12 +723,7 @@
             document.getElementById('edit-id').value = id || '';
             document.getElementById('modalTitle').innerText = id ? 'Edit Product' : 'Add New Product';
 
-            // Render Gallery
-            const galleryAssets = ['mentor.png', 'cert-bg.png', 'slider-1.png', 'slider-2.png', 'hero-bg.png', 'final-banner.png'];
-            const galleryGrid = document.getElementById('galleryGrid');
-            galleryGrid.innerHTML = galleryAssets.map(asset => `
-                <div class="gallery-item" onclick="selectGalleryImage('${asset}')" style="background-image:url('${asset}')" data-path="${asset}"></div>
-            `).join('');
+            // Gallery removed, using select drop down instead
 
             if (id) {
                 // Fetch product from API
@@ -758,11 +753,6 @@
         function updateImagePreview(path) {
             const img = document.getElementById('modalImagePreview');
             const placeholder = document.getElementById('previewPlaceholder');
-            const items = document.querySelectorAll('.gallery-item');
-
-            items.forEach(item => {
-                item.classList.toggle('selected', item.getAttribute('data-path') === path);
-            });
 
             if (path) {
                 img.src = path;
@@ -777,15 +767,7 @@
             }
         }
 
-        function selectGalleryImage(path) { updateImagePreview(path); }
 
-        function handleImageUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) { updateImagePreview(event.target.result); };
-            reader.readAsDataURL(file);
-        }
 
         function closeModal() { document.getElementById('productModal').style.display = 'none'; }
 
