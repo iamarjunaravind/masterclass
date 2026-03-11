@@ -524,9 +524,15 @@
                 <input type="text" id="edit-name" placeholder="e.g. Masterclass Reservation">
             </div>
 
-            <div class="form-group">
-                <label>Price (with currency symbol)</label>
-                <input type="text" id="edit-price" placeholder="₹499">
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Discounted Price</label>
+                    <input type="text" id="edit-price" placeholder="₹299">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Original Price</label>
+                    <input type="text" id="edit-old-price" placeholder="₹499">
+                </div>
             </div>
 
             <div class="form-group">
@@ -715,7 +721,10 @@
                                 </div>
                             </div>
                         </td>
-                        <td>${p.price}</td>
+                        <td>
+                            <div style="font-size: 11px; opacity: 0.5; text-decoration: line-through;">${p.old_price || '₹499'}</div>
+                            <div style="font-weight: 700;">${p.price}</div>
+                        </td>
                         <td>${p.sales || 0}</td>
                         <td><span class="badge success">${p.status}</span></td>
                         <td>
@@ -744,7 +753,8 @@
                 _editingProduct = p;
                 if (p) {
                     document.getElementById('edit-name').value = p.name || '';
-                    document.getElementById('edit-price').value = p.price || '';
+                    document.getElementById('edit-price').value = p ? p.price : '₹299';
+                    document.getElementById('edit-old-price').value = p ? (p.old_price || '₹499') : '₹499';
                     document.getElementById('edit-image').value = p.img || '';
                     document.getElementById('edit-desc').value = p.desc || '';
                     updateImagePreview(p.img);
@@ -752,7 +762,7 @@
             } else {
                 _editingProduct = null;
                 document.getElementById('edit-name').value = '';
-                document.getElementById('edit-price').value = '';
+                document.getElementById('edit-old-price').value = '₹499';
                 document.getElementById('edit-image').value = '';
                 document.getElementById('edit-desc').value = '';
                 updateImagePreview('');
@@ -786,12 +796,13 @@
             const id = document.getElementById('edit-id').value;
             const name = document.getElementById('edit-name').value.trim();
             const price = document.getElementById('edit-price').value.trim();
+            const old_price = document.getElementById('edit-old-price').value.trim();
             const img = document.getElementById('edit-image').value.trim();
             const desc = document.getElementById('edit-desc').value.trim();
 
             if (!name || !price) { alert('Name and Price are required!'); return; }
 
-            const body = { name, price, desc, img, old_price: '₹499' };
+            const body = { name, price, old_price, desc, img };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API}/products/${id}` : `${API}/products`;
 
