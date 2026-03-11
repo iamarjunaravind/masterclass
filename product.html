@@ -533,7 +533,7 @@
                     </div>
                 `).join('');
             } catch(e) {
-                grid.innerHTML = '<div style="text-align:center;padding:60px;color:#ef4444;">Failed to load products. Please refresh.</div>';
+                grid.innerHTML = '<div style="text-align:center;padding:60px;color:#ef4444;">Failed to load products.<br><br>Error: ' + e.message + '<br><br>Please refresh.</div>';
             }
         }
 
