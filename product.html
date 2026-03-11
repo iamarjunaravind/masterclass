@@ -491,37 +491,40 @@
         style.innerText = '@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }';
         document.head.appendChild(style);
 
-        function renderShopProducts() {
-            let products = JSON.parse(localStorage.getItem('netixa_products'));
-            if (!products) {
-                products = [
-                    { id: 'ebook', name: '100,000+ T-shirt Designs', price: '₹299', sales: 24, status: 'Active', desc: 'Premium bundle of vector t-shirt designs.', img: 'cert-bg.png' },
-                    { id: 'templates', name: '1000+ Anime T-Shirt Design', price: '₹199', sales: 12, status: 'Active', desc: 'Curated anime-style high-quality designs.', img: 'slider-1.png' },
-                    { id: 'email', name: '50+ Premium Grafftic Style', price: '₹199', sales: 8, status: 'Active', desc: 'Unique graffiti and street art graphics.', img: 'slider-2.png' },
-                    { id: 'roadmap', name: '700+ Anime T-shirt Design', price: '₹199', sales: 31, status: 'Active', desc: 'Expanded collection of anime-themed apparel art.', img: 'mentor.png' }
-                ];
-                localStorage.setItem('netixa_products', JSON.stringify(products));
-            }
-
+        async function renderShopProducts() {
             const grid = document.getElementById('productShopGrid');
             if (!grid) return;
 
-            grid.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <div class="image-container">
-                        <img src="${p.img || 'cert-bg.png'}" alt="${p.name}">
+            grid.innerHTML = '<div style="text-align:center;padding:60px;opacity:0.5;">Loading products...</div>';
+
+            try {
+                const res = await fetch('/api/products');
+                const products = await res.json();
+
+                if (!products.length) {
+                    grid.innerHTML = '<div style="text-align:center;padding:60px;opacity:0.5;">No products available right now.</div>';
+                    return;
+                }
+
+                grid.innerHTML = products.map(p => `
+                    <div class="product-card">
+                        <div class="image-container">
+                            <img src="${p.img || 'cert-bg.png'}" alt="${p.name}">
+                        </div>
+                        <h3>${p.name}</h3>
+                        <div class="price-row">
+                            <div class="old-price">${p.old_price || '₹499'}</div>
+                            <div class="new-price">${p.price}</div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="product-details?id=${p.id}" class="btn-buy">DETAILS</a>
+                            <button onclick="buyNow('${p.id}', '${p.name}', '${p.price}')" class="btn-buy primary">⚡ BUY</button>
+                        </div>
                     </div>
-                    <h3>${p.name}</h3>
-                    <div class="price-row">
-                        <div class="old-price">₹499</div>
-                        <div class="new-price">${p.price}</div>
-                    </div>
-                    <div class="action-buttons">
-                        <a href="product-details?id=${p.id}" class="btn-buy">DETAILS</a>
-                        <button onclick="buyNow('${p.id}', '${p.name}', '${p.price}')" class="btn-buy primary">⚡ BUY</button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch(e) {
+                grid.innerHTML = '<div style="text-align:center;padding:60px;color:#ef4444;">Failed to load products. Please refresh.</div>';
+            }
         }
 
         window.onload = () => {

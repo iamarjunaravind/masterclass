@@ -1,7 +1,8 @@
 /**
  * Netixa API — Cloudflare Worker
  * Handles: /api/register, /api/login, /api/me, /api/logout,
- *          /api/orders (GET/POST), /api/masterclass (GET/POST), /api/users (admin)
+ *          /api/orders (GET/POST), /api/masterclass (GET/POST),
+ *          /api/products (GET/POST/PUT/DELETE), /api/users, /api/stats (admin)
  */
 
 const CORS = {
@@ -240,6 +241,46 @@ export default {
         orders: orders.count,
         masterclass: masterclass.count,
       });
+    }
+
+    // ─── GET /api/products (PUBLIC — no auth needed) ─────────────────────
+    if (path === "/api/products" && request.method === "GET") {
+      const rows = await DB.prepare("SELECT * FROM products WHERE status = ? ORDER BY id ASC")
+        .bind("Active").all();
+      return json(rows.results);
+    }
+
+    // ─── POST /api/products (admin: create) ──────────────────────────────
+    if (path === "/api/products" && request.method === "POST") {
+      const session = await getSession(request, DB);
+      if (!session || session.role !== "admin") return err("Admin only.", 403);
+      const { name, price, old_price, desc, img } = await request.json();
+      if (!name || !price) return err("name and price are required.");
+      const result = await DB.prepare(
+        "INSERT INTO products (name, price, old_price, desc, img) VALUES (?, ?, ?, ?, ?)"
+      ).bind(name, price, old_price || "₹499", desc || "", img || "").run();
+      return json({ ok: true, id: result.meta?.last_row_id });
+    }
+
+    // ─── PUT /api/products/:id (admin: update) ───────────────────────────
+    if (path.startsWith("/api/products/") && request.method === "PUT") {
+      const session = await getSession(request, DB);
+      if (!session || session.role !== "admin") return err("Admin only.", 403);
+      const id = path.split("/")[3];
+      const { name, price, old_price, desc, img, status } = await request.json();
+      await DB.prepare(
+        "UPDATE products SET name=?, price=?, old_price=?, desc=?, img=?, status=? WHERE id=?"
+      ).bind(name, price, old_price || "₹499", desc || "", img || "", status || "Active", id).run();
+      return json({ ok: true });
+    }
+
+    // ─── DELETE /api/products/:id (admin: delete) ────────────────────────
+    if (path.startsWith("/api/products/") && request.method === "DELETE") {
+      const session = await getSession(request, DB);
+      if (!session || session.role !== "admin") return err("Admin only.", 403);
+      const id = path.split("/")[3];
+      await DB.prepare("DELETE FROM products WHERE id = ?").bind(id).run();
+      return json({ ok: true });
     }
 
     return err("Not found.", 404);

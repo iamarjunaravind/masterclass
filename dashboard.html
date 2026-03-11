@@ -565,46 +565,49 @@
             if (tabName === 'orders') loadOrdersTab();
         }
 
-        function renderProducts() {
-            let products = JSON.parse(localStorage.getItem('netixa_products'));
-            if (!products) {
-                products = [
-                    { id: 'ebook', name: '100,000+ T-shirt Designs', price: '₹299', sales: 24, status: 'Active', desc: 'Premium bundle of vector t-shirt designs.', img: 'cert-bg.png' },
-                    { id: 'templates', name: '1000+ Anime T-Shirt Design', price: '₹199', sales: 12, status: 'Active', desc: 'Curated anime-style high-quality designs.', img: 'slider-1.png' },
-                    { id: 'email', name: '50+ Premium Grafftic Style', price: '₹199', sales: 8, status: 'Active', desc: 'Unique graffiti and street art graphics.', img: 'slider-2.png' },
-                    { id: 'roadmap', name: '700+ Anime T-shirt Design', price: '₹199', sales: 31, status: 'Active', desc: 'Expanded collection of anime-themed apparel art.', img: 'mentor.png' }
-                ];
-                localStorage.setItem('netixa_products', JSON.stringify(products));
-            }
+        // Cache for the modal edit
+        let _editingProduct = null;
 
+        async function renderProducts() {
             const table = document.getElementById('productTable');
-            table.innerHTML = products.map(p => `
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:36px; height:36px; background:url('${p.img || 'cert-bg.png'}'); background-size:cover; border-radius:6px; border:1px solid var(--border);"></div>
-                            <div>
-                                <b>${p.name}</b><br>
-                                <span style="font-size:11px; opacity:0.5;">${(p.desc || '').substring(0, 30)}...</span>
+            table.innerHTML = '<tr><td colspan="5" style="opacity:0.4;text-align:center;padding:20px;">Loading...</td></tr>';
+            try {
+                const res = await fetch(`${API}/products`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const products = await res.json();
+                if (!products.length) {
+                    table.innerHTML = '<tr><td colspan="5" style="opacity:0.4;text-align:center;padding:20px;">No products yet. Add one!</td></tr>';
+                    return;
+                }
+                table.innerHTML = products.map(p => `
+                    <tr>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="width:36px; height:36px; background:url('${p.img || 'cert-bg.png'}'); background-size:cover; border-radius:6px; border:1px solid var(--border);"></div>
+                                <div>
+                                    <b>${p.name}</b><br>
+                                    <span style="font-size:11px; opacity:0.5;">${(p.desc || '').substring(0, 30)}...</span>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>${p.price}</td>
-                    <td>${p.sales}</td>
-                    <td><span class="badge success">${p.status}</span></td>
-                    <td>
-                        <button class="btn-action" style="background:#444; margin-right:5px;" onclick="openProductModal(${p.id})">Edit</button>
-                        <button class="btn-action" style="background:#b90404;" onclick="deleteProduct(${p.id})">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
+                        </td>
+                        <td>${p.price}</td>
+                        <td>${p.sales || 0}</td>
+                        <td><span class="badge success">${p.status}</span></td>
+                        <td>
+                            <button class="btn-action" style="background:#444; margin-right:5px;" onclick="openProductModal(${p.id})">Edit</button>
+                            <button class="btn-action" style="background:#b90404;" onclick="deleteProduct(${p.id})">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                table.innerHTML = '<tr><td colspan="5" style="color:#ef4444;text-align:center;padding:20px;">Failed to load products.</td></tr>';
+            }
         }
 
-        function openProductModal(id = null) {
+        async function openProductModal(id = null) {
             const modal = document.getElementById('productModal');
             document.getElementById('edit-id').value = id || '';
             document.getElementById('modalTitle').innerText = id ? 'Edit Product' : 'Add New Product';
-            
+
             // Render Gallery
             const galleryAssets = ['mentor.png', 'cert-bg.png', 'slider-1.png', 'slider-2.png', 'hero-bg.png', 'final-banner.png'];
             const galleryGrid = document.getElementById('galleryGrid');
@@ -613,8 +616,11 @@
             `).join('');
 
             if (id) {
-                const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-                const p = products.find(prod => prod.id === id);
+                // Fetch product from API
+                const res = await fetch(`${API}/products`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const products = await res.json();
+                const p = products.find(prod => prod.id == id);
+                _editingProduct = p;
                 if (p) {
                     document.getElementById('edit-name').value = p.name || '';
                     document.getElementById('edit-price').value = p.price || '';
@@ -623,13 +629,14 @@
                     updateImagePreview(p.img);
                 }
             } else {
+                _editingProduct = null;
                 document.getElementById('edit-name').value = '';
                 document.getElementById('edit-price').value = '';
                 document.getElementById('edit-image').value = '';
                 document.getElementById('edit-desc').value = '';
                 updateImagePreview('');
             }
-            
+
             modal.style.display = 'flex';
         }
 
@@ -637,7 +644,7 @@
             const img = document.getElementById('modalImagePreview');
             const placeholder = document.getElementById('previewPlaceholder');
             const items = document.querySelectorAll('.gallery-item');
-            
+
             items.forEach(item => {
                 item.classList.toggle('selected', item.getAttribute('data-path') === path);
             });
@@ -655,68 +662,57 @@
             }
         }
 
-        function selectGalleryImage(path) {
-            updateImagePreview(path);
-        }
+        function selectGalleryImage(path) { updateImagePreview(path); }
 
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(event) {
-                updateImagePreview(event.target.result);
-            };
+            reader.onload = function(event) { updateImagePreview(event.target.result); };
             reader.readAsDataURL(file);
         }
 
-        function closeModal() {
-            document.getElementById('productModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
 
-        function saveProduct() {
+        async function saveProduct() {
             const id = document.getElementById('edit-id').value;
-            const name = document.getElementById('edit-name').value;
-            const price = document.getElementById('edit-price').value;
-            const img = document.getElementById('edit-image').value;
-            const desc = document.getElementById('edit-desc').value;
+            const name = document.getElementById('edit-name').value.trim();
+            const price = document.getElementById('edit-price').value.trim();
+            const img = document.getElementById('edit-image').value.trim();
+            const desc = document.getElementById('edit-desc').value.trim();
 
-            if (!name || !price) {
-                alert("Name and Price are required!");
-                return;
-            }
+            if (!name || !price) { alert('Name and Price are required!'); return; }
 
-            let products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            
-            if (id) {
-                // UPDATE
-                const index = products.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    products[index] = { ...products[index], name, price, img, desc };
-                }
-            } else {
-                // ADD
-                products.push({
-                    id: Date.now(),
-                    name, price, img, desc,
-                    sales: 0,
-                    status: 'Active'
+            const body = { name, price, desc, img, old_price: '₹499' };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API}/products/${id}` : `${API}/products`;
+
+            try {
+                await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify(body)
                 });
+                closeModal();
+                renderProducts();
+            } catch(e) {
+                alert('Failed to save product. Try again.');
             }
-
-            localStorage.setItem('netixa_products', JSON.stringify(products));
-            closeModal();
-            renderProducts();
         }
 
         function addProduct() { openProductModal(); }
 
-        function deleteProduct(id) {
-            if (!confirm("Are you sure you want to delete this product?")) return;
-            let products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            products = products.filter(p => p.id != id);
-            localStorage.setItem('netixa_products', JSON.stringify(products));
-            renderProducts();
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            try {
+                await fetch(`${API}/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                renderProducts();
+            } catch(e) {
+                alert('Failed to delete product.');
+            }
         }
     </script>
 </body>

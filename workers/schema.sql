@@ -40,3 +40,22 @@ CREATE TABLE IF NOT EXISTS sessions (
     name       TEXT,
     created_at TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS products (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    name    TEXT NOT NULL,
+    price   TEXT NOT NULL,
+    old_price TEXT DEFAULT '₹499',
+    desc    TEXT,
+    img     TEXT,
+    status  TEXT DEFAULT 'Active',
+    sales   INTEGER DEFAULT 0
+);
+
+-- Seed default products (only if table is empty)
+INSERT OR IGNORE INTO products (id, name, price, desc, img) VALUES
+(1, '100,000+ T-shirt Designs',   '₹299', 'Premium bundle of vector t-shirt designs.', 'cert-bg.png'),
+(2, '1000+ Anime T-Shirt Design',  '₹199', 'Curated anime-style high-quality designs.',  'slider-1.png'),
+(3, '50+ Premium Grafftic Style',  '₹199', 'Unique graffiti and street art graphics.',   'slider-2.png'),
+(4, '700+ Anime T-shirt Design',   '₹199', 'Expanded collection of anime-themed apparel art.', 'mentor.png');
+

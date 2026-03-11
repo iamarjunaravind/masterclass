@@ -265,51 +265,55 @@
             return true;
         }
 
-        function renderProduct() {
+        async function renderProduct() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
-            const products = JSON.parse(localStorage.getItem('netixa_products') || '[]');
-            const product = products.find(p => p.id == id);
             const container = document.getElementById('productContent');
 
-            if (!product) {
-                container.innerHTML = `<div style="padding:100px 0; text-align:center;"><h1>Product Not Found</h1><a href="product">Return to shop</a></div>`;
-                return;
-            }
+            container.innerHTML = '<div style="padding:100px 0;text-align:center;opacity:0.5;">Loading...</div>';
 
-            const iconMap = { 'ebook': '📘', 'templates': '🎨', 'email': '⚙️', 'roadmap': '🗺️' };
-            const categoryMap = { 'ebook': 'Education / Strategy', 'templates': 'Design / UI/UX', 'email': 'Marketing / Automation', 'roadmap': 'Career / Growth' };
-            const priceNum = parseInt(product.price.replace(/[^0-9]/g, ''));
-            const discountPct = Math.round((1 - priceNum / 499) * 100);
+            try {
+                const res = await fetch('/api/products');
+                const products = await res.json();
+                const product = products.find(p => String(p.id) === String(id));
 
-            container.innerHTML = `
+                if (!product) {
+                    container.innerHTML = `<div style="padding:100px 0; text-align:center;"><h1>Product Not Found</h1><a href="product">Return to shop</a></div>`;
+                    return;
+                }
+
+                const priceNum = parseInt(product.price.replace(/[^0-9]/g, ''));
+                const oldNum = parseInt((product.old_price || '₹499').replace(/[^0-9]/g, ''));
+                const discountPct = oldNum > priceNum ? Math.round((1 - priceNum / oldNum) * 100) : 0;
+
+                container.innerHTML = `
                 <div class="product-detail">
                     <div class="product-visuals">
                         <div class="product-image-container">
-                            ${product.img ? `<img src="${product.img}" alt="${product.name}">` : `<div style="font-size:120px;line-height:1;">${iconMap[id] || '📦'}</div>`}
+                            ${product.img ? `<img src="${product.img}" alt="${product.name}">` : `<div style="font-size:120px;line-height:1;">📦</div>`}
                         </div>
                     </div>
                     <div class="product-info">
-                        <span class="category-badge">${categoryMap[id] || 'Digital Product'}</span>
+                        <span class="category-badge">Digital Product</span>
                         <h1>${product.name}</h1>
                         <p class="product-description">${product.desc || 'Premium digital resources for your professional growth.'}</p>
 
                         <div class="price-box">
                             <div class="current-price">${product.price}</div>
-                            <div class="original-price">₹499</div>
+                            <div class="original-price">${product.old_price || '₹499'}</div>
                             <div class="discount-badge">${discountPct}% OFF</div>
                         </div>
 
                         <ul class="features-list">
                             <li>Instant Lifetime Access</li>
                             <li>2026 Updated Content</li>
-                            <li>Mobile & Tablet Optimized</li>
+                            <li>Mobile &amp; Tablet Optimized</li>
                             <li>Priority Support Included</li>
                         </ul>
 
                         <div class="action-row">
-                            <button class="btn-add-cart" onclick="addToCart('${id}')">ADD TO CART</button>
-                            <button class="btn-buy-now" onclick="buyNow('${id}', '${product.name}', '${product.price}')">⚡ BUY IT NOW</button>
+                            <button class="btn-add-cart" onclick="addToCart('${product.id}')">ADD TO CART</button>
+                            <button class="btn-buy-now" onclick="buyNow('${product.id}', '${product.name}', '${product.price}')">⚡ BUY IT NOW</button>
                         </div>
                     </div>
                 </div>
@@ -320,17 +324,20 @@
                     <div class="review-card">
                         <div class="stars">★★★★★</div>
                         <p style="font-weight:700; margin-bottom:10px;">Transformation in 3 weeks!</p>
-                        <p style="color:rgba(255,255,255,0.5); font-size:15px;">"Exactly what I needed. The level of detail in this ${product.name} is insane. Worth every paisa."</p>
+                        <p style="color:rgba(255,255,255,0.5); font-size:15px;">"Exactly what I needed. Worth every paisa."</p>
                         <p style="margin-top:15px; font-size:12px; font-weight:800;">- ARJUN S.</p>
                     </div>
                     <div class="review-card">
                         <div class="stars">★★★★★</div>
                         <p style="font-weight:700; margin-bottom:10px;">Best budget investment</p>
-                        <p style="color:rgba(255,255,255,0.5); font-size:15px;">"Can't believe the value given for this price. Netixa team always overdelivers."</p>
+                        <p style="color:rgba(255,255,255,0.5); font-size:15px;">"Can't believe the value. Netixa team always overdelivers."</p>
                         <p style="margin-top:15px; font-size:12px; font-weight:800;">- SARA K.</p>
                     </div>
                 </div>
             `;
+            } catch(e) {
+                container.innerHTML = '<div style="padding:100px 0;text-align:center;color:#ef4444;">Failed to load product. Please refresh.</div>';
+            }
         }
 
         function addToCart(id) {
