@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS products (
     desc    TEXT,
     img     TEXT,
     status  TEXT DEFAULT 'Active',
-    sales   INTEGER DEFAULT 0
+    sales   INTEGER DEFAULT 0,
+    result_link TEXT
 );
 
 -- Seed default products (only if table is empty)

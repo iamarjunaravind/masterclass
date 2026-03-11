@@ -563,7 +563,12 @@
 
             <div class="form-group">
                 <label>Description (Optional)</label>
-                <textarea id="edit-desc" rows="3" placeholder="Short description of the product..."></textarea>
+                <textarea id="edit-desc" rows="2" placeholder="Short description of the product..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Digital Asset Link (Result/Download Link)</label>
+                <input type="text" id="edit-result-link" placeholder="https://drive.google.com/...">
             </div>
 
             <div class="modal-actions">
@@ -753,18 +758,21 @@
                 _editingProduct = p;
                 if (p) {
                     document.getElementById('edit-name').value = p.name || '';
-                    document.getElementById('edit-price').value = p ? p.price : '₹299';
-                    document.getElementById('edit-old-price').value = p ? (p.old_price || '₹499') : '₹499';
+                    document.getElementById('edit-price').value = p.price || '₹299';
+                    document.getElementById('edit-old-price').value = p.old_price || '₹499';
                     document.getElementById('edit-image').value = p.img || '';
                     document.getElementById('edit-desc').value = p.desc || '';
+                    document.getElementById('edit-result-link').value = p.result_link || '';
                     updateImagePreview(p.img);
                 }
             } else {
                 _editingProduct = null;
                 document.getElementById('edit-name').value = '';
+                document.getElementById('edit-price').value = '₹299';
                 document.getElementById('edit-old-price').value = '₹499';
                 document.getElementById('edit-image').value = '';
                 document.getElementById('edit-desc').value = '';
+                document.getElementById('edit-result-link').value = '';
                 updateImagePreview('');
             }
 
@@ -799,10 +807,11 @@
             const old_price = document.getElementById('edit-old-price').value.trim();
             const img = document.getElementById('edit-image').value.trim();
             const desc = document.getElementById('edit-desc').value.trim();
+            const result_link = document.getElementById('edit-result-link').value.trim();
+            
+            if (!name || !price) return alert('Name and Price are required');
 
-            if (!name || !price) { alert('Name and Price are required!'); return; }
-
-            const body = { name, price, old_price, desc, img };
+            const body = { name, price, old_price, desc, img, result_link };
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API}/products/${id}` : `${API}/products`;
 

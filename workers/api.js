@@ -254,11 +254,11 @@ export default {
     if (path === "/api/products" && request.method === "POST") {
       const session = await getSession(request, DB);
       if (!session || session.role !== "admin") return err("Admin only.", 403);
-      const { name, price, old_price, desc, img } = await request.json();
+      const { name, price, old_price, desc, img, result_link } = await request.json();
       if (!name || !price) return err("name and price are required.");
       const result = await DB.prepare(
-        "INSERT INTO products (name, price, old_price, desc, img) VALUES (?, ?, ?, ?, ?)"
-      ).bind(name, price, old_price || "₹499", desc || "", img || "").run();
+        "INSERT INTO products (name, price, old_price, desc, img, result_link) VALUES (?, ?, ?, ?, ?, ?)"
+      ).bind(name, price, old_price || "₹499", desc || "", img || "", result_link || "").run();
       return json({ ok: true, id: result.meta?.last_row_id });
     }
 
@@ -267,10 +267,10 @@ export default {
       const session = await getSession(request, DB);
       if (!session || session.role !== "admin") return err("Admin only.", 403);
       const id = path.split("/")[3];
-      const { name, price, old_price, desc, img, status } = await request.json();
+      const { name, price, old_price, desc, img, status, result_link } = await request.json();
       await DB.prepare(
-        "UPDATE products SET name=?, price=?, old_price=?, desc=?, img=?, status=? WHERE id=?"
-      ).bind(name, price, old_price || "₹499", desc || "", img || "", status || "Active", id).run();
+        "UPDATE products SET name=?, price=?, old_price=?, desc=?, img=?, status=?, result_link=? WHERE id=?"
+      ).bind(name, price, old_price || "₹499", desc || "", img || "", status || "Active", result_link || "", id).run();
       return json({ ok: true });
     }
 
