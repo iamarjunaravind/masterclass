@@ -107,13 +107,13 @@
             .product-card { padding: 15px; }
             .product-card .image-container { height: 140px; margin-bottom: 12px; }
             .product-card h3 { font-size: 11px !important; margin-bottom: 0px; min-height: auto; }
-            .price-row { margin-bottom: 15px; gap: 2px; }
+            .price-row { margin-bottom: 8px; gap: 2px; }
             .price-row .old-price { font-size: 12px; }
             .price-row .new-price { font-size: 15px; }
             
             /* Button specific flex adjustments so they stack nicely inside the squeezed container */
             .action-buttons {
-                flex-direction: column !important;
+                flex-direction: row !important;
                 gap: 6px !important;
             }
             .btn-buy { padding: 8px 0; font-size: 11px; margin: 0; }
@@ -192,7 +192,7 @@
             align-items: center;
             justify-content: center;
             margin-top: auto;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             gap: 12px;
         }
 
@@ -527,7 +527,7 @@
                 }
 
                 grid.innerHTML = products.map(p => `
-                    <div class="product-card">
+                    <div class="product-card" onclick="window.location.href='product-details?id=${p.id}'" style="cursor:pointer;">
                         <div class="image-container">
                             <img src="${fixDriveLink(p.img)}" alt="${p.name}">
                         </div>
@@ -537,8 +537,8 @@
                             <div class="new-price">${p.price}</div>
                         </div>
                         <div class="action-buttons">
-                            <a href="product-details?id=${p.id}" class="btn-buy">DETAILS</a>
-                            <button onclick="buyNow('${p.id}', '${p.name}', '${p.price}')" class="btn-buy primary">⚡ BUY</button>
+                            <button onclick="event.stopPropagation(); addToCart('${p.id}')" class="btn-buy" style="background:rgba(255,255,255,0.05); color:#fff; flex:1;">🛒 CART</button>
+                            <button onclick="event.stopPropagation(); buyNow('${p.id}', '${p.name}', '${p.price}')" class="btn-buy primary" style="flex:1.2;">⚡ BUY</button>
                         </div>
                     </div>
                 `).join('');
