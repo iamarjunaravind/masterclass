@@ -10,8 +10,3 @@ database_id = "96b174c8-018d-4c89-98d7-29d09f2ebef2"
 
 [vars]
 ADMIN_EMAIL = "admin@netixa.tech"
-
-# Only intercept /api/* — let Cloudflare Pages serve everything else
-[[routes]]
-pattern = "netixa.tech/api/*"
-zone_name = "netixa.tech"

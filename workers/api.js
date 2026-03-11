@@ -283,29 +283,6 @@ export default {
       return json({ ok: true });
     }
 
-    // ─── Proxy non-API requests to GitHub Pages (static site) ────────────
-    // This handles netixa.tech being a custom domain on this Worker.
-    // Any request that isn't /api/* is forwarded to GitHub Pages transparently.
-    if (!path.startsWith("/api/")) {
-      const STATIC_ORIGIN = "https://iamarjunaravind.github.io/masterclass";
-      const staticUrl = STATIC_ORIGIN + path + (url.search || "");
-      const staticReq = new Request(staticUrl, {
-        method: request.method,
-        headers: request.headers,
-      });
-      try {
-        const staticRes = await fetch(staticReq);
-        // Return the response with the original headers, allowing caching
-        return new Response(staticRes.body, {
-          status: staticRes.status,
-          statusText: staticRes.statusText,
-          headers: staticRes.headers,
-        });
-      } catch (e) {
-        return new Response("Site temporarily unavailable.", { status: 502 });
-      }
-    }
-
     return err("Not found.", 404);
   },
 };
