@@ -11,3 +11,8 @@ Thumbs.db
 # Temp files
 tmp/
 *.log
+
+# Wrangler local state
+.wrangler/
+node_modules/
+update_api_url.py
