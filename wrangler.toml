@@ -5,7 +5,7 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "netixa-db"
-database_id = "REPLACE_WITH_YOUR_D1_ID"
+database_id = "96b174c8-018d-4c89-98d7-29d09f2ebef2"
 
 [vars]
 ADMIN_EMAIL = "admin@netixa.tech"
