@@ -1498,7 +1498,8 @@
                                 <img src="${fixDriveLink(p.img)}" style="max-width:130%; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));" alt="${p.name}">
                             </div>
                             <h4 style="font-size:16px;">${p.name}</h4>
-                            <div style="margin-top:auto;">
+                            <div style="margin-top:auto; display:flex; align-items:center; justify-content:center; gap:10px;">
+                                <div style="font-size:14px; text-decoration:line-through; color:#ff4444; font-weight:800;">₹${(p.old_price || '499').replace('₹','')}</div>
                                 <div style="font-size:24px; font-weight:900;">₹${p.price}</div>
                             </div>
                         </a>
