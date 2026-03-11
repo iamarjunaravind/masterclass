@@ -215,14 +215,18 @@
     <script>
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
 
-        function fixDriveLink(url) {
+        function fixImageLink(url) {
             if (!url) return 'cert-bg.png';
             if (url && url.includes('drive.google.com/file/d/')) {
                 const id = url.split('/d/')[1].split('/')[0];
                 return `https://drive.google.com/uc?export=view&id=${id}`;
             }
+            if (url && url.includes('dropbox.com')) {
+                return url.replace('dl=0', 'dl=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+            }
             return url;
         }
+        const fixDriveLink = fixImageLink;
 
         async function renderCart() {
             const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');

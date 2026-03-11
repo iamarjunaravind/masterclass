@@ -396,14 +396,18 @@
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
 
-        function fixDriveLink(url) {
+        function fixImageLink(url) {
             if (!url) return 'cert-bg.png';
             if (url.includes('drive.google.com/file/d/')) {
                 const id = url.split('/d/')[1].split('/')[0];
                 return `https://drive.google.com/uc?export=view&id=${id}`;
             }
+            if (url.includes('dropbox.com')) {
+                return url.replace('dl=0', 'dl=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+            }
             return url;
         }
+        const fixDriveLink = fixImageLink; // Alias for backward compatibility
 
         // Require login before doing anything in the shop
         function requireLogin() {
