@@ -396,6 +396,15 @@
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
 
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
+        }
+
         // Require login before doing anything in the shop
         function requireLogin() {
             if (!auth.email) {
@@ -519,7 +528,7 @@
                 grid.innerHTML = products.map(p => `
                     <div class="product-card">
                         <div class="image-container">
-                            <img src="${p.img || 'cert-bg.png'}" alt="${p.name}">
+                            <img src="${fixDriveLink(p.img)}" alt="${p.name}">
                         </div>
                         <h3>${p.name}</h3>
                         <div class="price-row">

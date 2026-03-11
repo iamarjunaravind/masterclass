@@ -284,6 +284,15 @@
             window.location.href = 'login';
         }
 
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url && url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
+        }
+
         async function renderCart() {
             const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
             const container = document.getElementById('cartContent');
@@ -302,7 +311,7 @@
                 
                 const products_db = {};
                 apiProducts.forEach(p => {
-                    products_db[p.id] = { name: p.name, price: p.price, icon: p.img || '📦' };
+                    products_db[p.id] = { name: p.name, price: p.price, img: fixDriveLink(p.img) };
                 });
 
                 container.innerHTML = cart.map(id => {
@@ -310,10 +319,10 @@
                     if (p) {
                         return `
                             <div class="cart-item">
-                                <div class="cart-item-icon">${p.icon}</div>
+                                <div class="cart-item-icon" style="width:30px; height:30px; background:url('${p.img}'); background-size:cover; border-radius:6px; flex-shrink:0;"></div>
                                 <div class="cart-item-details">
                                     <b>${p.name}</b>
-                                    <span>₹${p.price}</span>
+                                    <span>${p.price}</span>
                                 </div>
                             </div>
                         `;

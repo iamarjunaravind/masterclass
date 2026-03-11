@@ -254,6 +254,15 @@
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         let products_db = {};
 
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url && url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
+        }
+
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
         const leadForm = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -315,7 +324,7 @@
                 
                 products_db = {};
                 apiProducts.forEach(p => {
-                    products_db[p.id] = { name: p.name, price: p.price, icon: p.img || '📦' };
+                    products_db[p.id] = { name: p.name, price: p.price, img: fixDriveLink(p.img) };
                 });
 
                 summaryEl.innerHTML = '';
@@ -323,14 +332,15 @@
                 cart.forEach(id => {
                     const p = products_db[id];
                     if (p) {
-                        totalAmount += p.price;
+                        const priceVal = (parseInt(p.price.replace(/[^0-9]/g, '')) || 0);
+                        totalAmount += priceVal;
                         summaryEl.innerHTML += `
                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
                                 <div style="display: flex; gap: 10px; align-items: center;">
-                                    <span style="font-size: 20px;">${p.icon}</span>
+                                    <div style="width:30px; height:30px; background:url('${p.img}'); background-size:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.1);"></div>
                                     <div style="font-size: 13px; font-weight: 700; color: #fff;">${p.name}</div>
                                 </div>
-                                <div style="font-weight: 800; color: var(--marketing-red);">₹${p.price}</div>
+                                <div style="font-weight: 800; color: var(--marketing-red);">₹${priceVal}</div>
                             </div>
                         `;
                     }

@@ -589,11 +589,13 @@
             return res.json();
         }
 
-        async function logout() {
-            await fetch(`${API}/logout`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
-            localStorage.removeItem('netixa_token');
-            localStorage.removeItem('netixa_auth');
-            window.location.href = 'login';
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
         }
 
         // Load stats on page load
@@ -702,7 +704,7 @@
                     <tr>
                         <td>
                             <div style="display:flex; align-items:center; gap:12px;">
-                                <div style="width:36px; height:36px; background:url('${p.img || 'cert-bg.png'}'); background-size:cover; border-radius:6px; border:1px solid var(--border);"></div>
+                                <div style="width:36px; height:36px; background:url('${fixDriveLink(p.img)}'); background-size:cover; border-radius:6px; border:1px solid var(--border);"></div>
                                 <div>
                                     <b>${p.name}</b><br>
                                     <span style="font-size:11px; opacity:0.5;">${(p.desc || '').substring(0, 30)}...</span>

@@ -214,6 +214,16 @@
 
     <script>
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
+
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url && url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
+        }
+
         async function renderCart() {
             const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
             const listEl = document.getElementById('cartList');
@@ -238,7 +248,7 @@
                 // Convert array to dictionary for easy cart lookup
                 const products_db = {};
                 apiProducts.forEach(p => {
-                    products_db[p.id] = { name: p.name, price: p.price, icon: p.img || '📦' };
+                    products_db[p.id] = { name: p.name, price: p.price, img: fixDriveLink(p.img) };
                 });
 
                 listEl.innerHTML = '';
@@ -252,11 +262,11 @@
                     const p = products_db[id];
                     if (p) {
                         validCart.push(id);
-                        total += p.price;
+                        total += (parseInt(p.price.replace(/[^0-9]/g, '')) || 0);
                         listEl.innerHTML += `
                             <div class="cart-item">
                                 <div class="item-info">
-                                    <span class="item-icon">${p.icon}</span>
+                                    <div class="item-icon" style="width:40px; height:40px; background:url('${p.img}'); background-size:cover; border-radius:8px;"></div>
                                     <div class="item-details">
                                         <b>${p.name}</b>
                                         <span>Instant Access after payment</span>

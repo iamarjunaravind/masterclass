@@ -266,6 +266,15 @@
             return true;
         }
 
+        function fixDriveLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url && url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            return url;
+        }
+
         async function renderProduct() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
@@ -291,7 +300,7 @@
                 <div class="product-detail">
                     <div class="product-visuals">
                         <div class="product-image-container">
-                            ${product.img ? `<img src="${product.img}" alt="${product.name}">` : `<div style="font-size:120px;line-height:1;">📦</div>`}
+                            ${product.img ? `<img src="${fixDriveLink(product.img)}" alt="${product.name}">` : `<div style="font-size:120px;line-height:1;">📦</div>`}
                         </div>
                     </div>
                     <div class="product-info">
