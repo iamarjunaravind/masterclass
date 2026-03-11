@@ -1055,24 +1055,60 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
 
-            // CTA: show WhatsApp group if not logged in, else show "You're Registered"
+            // CTA: show WhatsApp group if logged in AND purchased masterclass
             const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
             const ctaEl = document.getElementById('mcCTA');
-            if (auth.email) {
-                ctaEl.innerHTML = `
-                    <div style="text-align:center;">
-                        <div style="font-size:11px; font-weight:700; color:#10b981; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">✅ You're Registered</div>
-                        <div style="font-size:13px; color:rgba(255,255,255,0.5);">Hello, <b style="color:#fff;">${auth.email}</b></div>
-                        <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" target="_blank" style="display:inline-block;margin-top:10px;background:#25d366;color:#fff;padding:10px 20px;border-radius:10px;font-weight:800;font-size:13px;text-decoration:none;">📲 Join WhatsApp Group</a>
-                    </div>`;
-            } else {
-                ctaEl.innerHTML = `
-                    <div style="text-align:center;">
-                        <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">Register & Get the WhatsApp Link</div>
-                        <a href="login" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🔐 Sign In to Register</a>
-                        <div style="font-size:11px; color:rgba(255,255,255,0.3);">Already have an account? Sign in to get the WhatsApp group link.</div>
-                    </div>`;
+            
+            async function checkMasterclassAccess() {
+                if (!auth.email) {
+                    // Not logged in
+                    ctaEl.innerHTML = `
+                        <div style="text-align:center;">
+                            <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">Register & Get the WhatsApp Link</div>
+                            <a href="login" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🔐 Sign In to Register</a>
+                            <div style="font-size:11px; color:rgba(255,255,255,0.3);">Already have an account? Sign in to get the WhatsApp group link.</div>
+                        </div>`;
+                    return;
+                }
+
+                // Show loading state while checking database
+                ctaEl.innerHTML = `<div style="font-size:12px; color:rgba(255,255,255,0.5);">Checking registration status...</div>`;
+
+                try {
+                    const res = await fetch(`${API}/orders`, {
+                        headers: { 'Authorization': `Bearer ${auth.token}` }
+                    });
+                    
+                    if (res.ok) {
+                        const orders = await res.json();
+                        // Check if they bought the masterclass
+                        const hasAccess = orders.some(o => 
+                            o.product_name && o.product_name.toLowerCase().includes('masterclass')
+                        );
+
+                        if (hasAccess) {
+                            ctaEl.innerHTML = `
+                                <div style="text-align:center;">
+                                    <div style="font-size:11px; font-weight:700; color:#10b981; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">✅ You're Registered</div>
+                                    <div style="font-size:13px; color:rgba(255,255,255,0.5);">Hello, <b style="color:#fff;">${auth.name || auth.email}</b></div>
+                                    <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" target="_blank" style="display:inline-block;margin-top:10px;background:#25d366;color:#fff;padding:10px 20px;border-radius:10px;font-weight:800;font-size:13px;text-decoration:none;">📲 Join WhatsApp Group</a>
+                                </div>`;
+                        } else {
+                            ctaEl.innerHTML = `
+                                <div style="text-align:center;">
+                                    <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">You haven't reserved your seat yet</div>
+                                    <a href="product-details?id=masterclass" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🚀 Register Now — ₹9</a>
+                                </div>`;
+                        }
+                    } else {
+                        throw new Error("Failed to fetch orders");
+                    }
+                } catch (e) {
+                    ctaEl.innerHTML = `<div style="font-size:12px; color:var(--marketing-red);">Error checking registration status. Try logging out and back in.</div>`;
+                }
             }
+
+            checkMasterclassAccess();
         })();
     </script>
 

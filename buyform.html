@@ -358,19 +358,30 @@
                 "image": "mentor.png",
                 "handler": function (response){
                     // Save to user history if logged in
-                    if (auth.role === 'student') {
-                        let orders = JSON.parse(localStorage.getItem('netixa_orders') || '[]');
+                    if (auth.role === 'student' && auth.token) {
                         let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
                         if (cart.length === 0) cart = ['masterclass'];
                         
-                        cart.forEach(id => {
-                            orders.push({
-                                productName: products_db[id].name,
-                                date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-                                paymentId: response.razorpay_payment_id
+                        // Push each item to the backend API securely
+                        Promise.all(cart.map(id => {
+                            const productName = products_db[id]?.name || id;
+                            return fetch(`${API}/orders`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${auth.token}`
+                                },
+                                body: JSON.stringify({
+                                    product_name: productName,
+                                    payment_id: response.razorpay_payment_id,
+                                    amount: products_db[id]?.price || 0
+                                })
                             });
+                        })).then(() => {
+                            console.log("Orders saved to DB");
+                        }).catch(e => {
+                            console.error("Failed to save orders to DB", e);
                         });
-                        localStorage.setItem('netixa_orders', JSON.stringify(orders));
                     }
 
                     // Clear cart on success
