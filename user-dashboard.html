@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard | Netixa</title>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1437473727867655');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1437473727867655&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,21 +58,76 @@
             z-index: 100;
         }
 
-        .logo {
-            font-family: 'Outfit';
-            font-size: 20px;
+        /* MOBILE HEADER */
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            background: #000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0.1;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
             font-weight: 900;
-            margin-bottom: 40px;
-            padding-left: 15px;
-            cursor: pointer;
-            user-select: none;
-            background: linear-gradient(135deg, #fff, #9ca3af);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
             letter-spacing: -0.5px;
+            text-transform: uppercase;
             text-decoration: none;
         }
+
+        .menu-icon {
+            width: 30px; height: 30px; display: flex; flex-direction: column; justify-content: space-around; cursor: pointer;
+        }
+
+        .menu-icon span {
+            width: 100%; height: 3px; background: #fff; border-radius: 10px; transition: 0.3s; transform-origin: center;
+        }
+
+        .menu-icon.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-icon.active span:nth-child(2) { opacity: 0; }
+        .menu-icon.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* MOBILE NAV DRAWER */
+        .nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .nav-drawer {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #000; z-index: 1600; padding: 40px; transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; gap: 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-drawer.active { right: 0; }
+        .nav-drawer .logo-text { margin-bottom: 30px; }
+
+        .nav-link {
+            text-decoration: none; color: #fff; font-size: 18px; font-weight: 700; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: 0.2s;
+        }
+        .nav-link:hover { color: var(--accent-blue); padding-left: 10px; }
 
         .nav-item {
             padding: 14px 18px;
@@ -201,26 +273,57 @@
         @media (max-width: 768px) {
             .grid { grid-template-columns: 1fr; }
             .sidebar { display: none; }
+            .header { display: block; }
             .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            .welcome-hero h1 { font-size: 22px; }
+            .welcome-hero p { font-size: 13px; }
         }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <a href="index" class="logo">NETIXA</a>
+        <a href="index.html" class="logo">NETIXA</a>
         <div class="nav-item active">🏠 <span>Dashboard</span></div>
-        <a href="product" class="nav-item">🛍️ <span>Shop</span></a>
-        <a href="cart" class="nav-item">🛒 <span>My Cart</span></a>
+        <a href="orders.html" class="nav-item">📦 <span>My Orders</span></a>
+        <a href="product.html" class="nav-item">🛍️ <span>Shop</span></a>
+        <a href="cart.html" class="nav-item">🛒 <span>My Cart</span></a>
         <div class="nav-item logout" onclick="logout()">🚪 <span>Logout</span></div>
     </div>
 
-    <div class="main-content">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="width: 45px; height: 45px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" id="userInitial">U</div>
-                <h1 style="font-family: 'Outfit'; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;" id="pageTitle">Student Dashboard</h1>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo-text">NETIXA</a>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px;" id="userInitialMobile">U</div>
+                <div class="menu-icon" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-        </header>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+    <div class="nav-drawer" id="navDrawer">
+        <div class="logo-text">NETIXA</div>
+        <div id="drawerProfile" style="display:flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+            <div style="width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 16px;" id="drawerInitial">U</div>
+            <div style="flex-grow: 1;">
+                <div style="font-size: 14px; font-weight: 700; color: #fff;">My Account</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.5);" id="drawerEmail">student@example.com</div>
+            </div>
+        </div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="user-dashboard.html" class="nav-link active">🏠 Dashboard</a>
+        <a href="orders.html" class="nav-link">📦 My Orders</a>
+        <a href="product.html" class="nav-link" style="color: var(--marketing-red);">Digital Shop 🛍️</a>
+        <a href="cart.html" class="nav-link">🛒 My Cart</a>
+        <a href="contact.html" class="nav-link">Contact Support</a>
+        <div style="margin-top: auto;">
+            <a href="#" class="nav-link logout" onclick="logout()" style="color: #ef4444;">🚪 Logout</a>
+        </div>
+    </div>
 
         <div class="welcome-hero">
             <h1 id="welcomeTitle">Welcome Back!</h1>
@@ -230,9 +333,12 @@
         <div class="grid">
             <div class="left-col">
                 <div class="card">
-                    <h2>📦 My Digital Assets</h2>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h2 style="margin-bottom:0;">📦 Recent Purchases</h2>
+                        <a href="orders.html" style="color:var(--accent-blue); font-size:12px; font-weight:700; text-decoration:none;">VIEW ALL →</a>
+                    </div>
                     <div id="noOrders" style="opacity: 0.5; padding: 40px; text-align: center; border: 2px dashed var(--border); border-radius: 20px;">
-                        No purchases yet. Start your journey in the <a href="product" style="color: var(--accent-blue); text-decoration: none; font-weight: 700;">Shop 🛍️</a>.
+                        No purchases yet. Start your journey in the <a href="product.html" style="color: var(--accent-blue); text-decoration: none; font-weight: 700;">Shop 🛍️</a>.
                     </div>
                     <div id="orderList">
                         <!-- Orders Injected -->
@@ -254,14 +360,14 @@
                         <!-- Inject cart -->
                     </div>
                     <div style="margin-top: 25px;">
-                        <a href="cart" class="btn-access" style="background: var(--accent-blue); color: #fff; display: block; text-align: center; padding: 14px; border-radius: 12px;">VIEW CART & CHECKOUT →</a>
+                        <a href="cart.html" class="btn-access" style="background: var(--accent-blue); color: #fff; display: block; text-align: center; padding: 14px; border-radius: 12px;">VIEW CART & CHECKOUT →</a>
                     </div>
                 </div>
 
                 <div class="card support-card">
                     <h2>🆘 Support</h2>
                     <p style="font-size: 14px; opacity: 0.7; line-height: 1.5;">Need help with your downloads or masterclass access? Our premium student support is here for you.</p>
-                    <a href="contact" style="display: inline-block; margin-top: 20px; color: var(--accent-purple); font-weight: 800; text-decoration: none; font-size: 14px;">GET HELP NOW →</a>
+                    <a href="contact.html" style="display: inline-block; margin-top: 20px; color: var(--accent-purple); font-weight: 800; text-decoration: none; font-size: 14px;">GET HELP NOW →</a>
                 </div>
             </div>
         </div>
@@ -273,15 +379,39 @@
         // AUTH CHECK
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
         if (auth.role !== 'student') {
-            window.location.href = 'login';
+            window.location.href = 'login.html';
         }
 
-        document.getElementById('welcomeTitle').innerText = `Welcome, ${auth.email.split('@')[0]}!`;
-        document.getElementById('userInitial').innerText = auth.email.charAt(0).toUpperCase();
+        // Navigation
+        const menuToggle = document.getElementById('menuToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navDrawer = document.getElementById('navDrawer');
+
+        function toggleMenu() {
+            menuToggle.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            navDrawer.classList.toggle('active');
+            document.body.style.overflow = navDrawer.classList.contains('active') ? 'hidden' : '';
+        }
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if(navOverlay) navOverlay.addEventListener('click', toggleMenu);
+
+        function updateAuthNav() {
+            const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
+            const initial = auth.name ? auth.name.charAt(0).toUpperCase() : 'U';
+            
+            // document.getElementById('userInitial').innerText = initial; // This ID does not exist in the provided HTML
+            document.getElementById('userInitialMobile').innerText = initial;
+            document.getElementById('drawerInitial').innerText = initial;
+            document.getElementById('drawerEmail').innerText = auth.email || 'student@example.com';
+            document.getElementById('welcomeTitle').innerText = auth.name ? `Welcome Back, ${auth.name.split(' ')[0]}!` : 'Welcome Back!';
+        }
+        updateAuthNav();
 
         function logout() {
             localStorage.removeItem('netixa_auth');
-            window.location.href = 'login';
+            window.location.href = 'login.html';
         }
 
         function fixImageLink(url) {
@@ -353,19 +483,43 @@
                     
                     if (orders.length > 0) {
                         placeholder.style.display = 'none';
-                        container.innerHTML = orders.map(order => `
-                            <div class="order-item">
-                                <div class="order-info">
-                                    <b>${order.product_name}</b>
-                                    <span>Purchased</span>
-                                </div>
-                                <a href="#" class="btn-access" onclick="triggerDownload('${order.product_name}')">DOWNLOAD</a>
-                            </div>
-                        `).join('');
                         
-                        // Update progress card dynamically
+                        // Separate masterclass from digital assets
+                        const masterclassOrder = orders.find(o => o.product_name.toLowerCase().includes('masterclass'));
+                        const digitalAssets = orders.filter(o => !o.product_name.toLowerCase().includes('masterclass'));
+
+                        container.innerHTML = digitalAssets.map(order => {
+                            const actionBtn = order.result_link 
+                                ? `<a href="${order.result_link}" target="_blank" class="btn-access">ACCESS NOW</a>`
+                                : `<span style="font-size:11px; opacity:0.5;">LINK PENDING</span>`;
+
+                            return `
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <b>${order.product_name}</b>
+                                        <span>Digital Asset Purchased</span>
+                                    </div>
+                                    ${actionBtn}
+                                </div>
+                            `;
+                        }).join('');
+
+                        if (digitalAssets.length === 0) {
+                            container.innerHTML = '<div style="text-align:center; opacity:0.5; padding:20px;">No course assets found.</div>';
+                        }
+                        
+                        // Update progress card / WhatsApp link
                         const progressCard = document.getElementById('progressText');
-                        if(progressCard) progressCard.innerHTML = `You are currently enrolled in <b>${orders.length} courses</b>. Keep learning!`;
+                        if(masterclassOrder) {
+                            progressCard.innerHTML = `
+                                <div style="display:flex; flex-direction:column; gap:12px;">
+                                    <p style="color:#fff; font-weight:700;">✅ Masterclass Access Confirmed</p>
+                                    <a href="https://chat.whatsapp.com/L1pI..." target="_blank" style="background:#10b981; color:#fff; padding:12px; border-radius:10px; text-decoration:none; text-align:center; font-weight:800; font-size:13px; display:block;">🔥 JOIN PRIVATE WHATSAPP GROUP</a>
+                                </div>
+                            `;
+                        } else {
+                            if(progressCard) progressCard.innerHTML = `You are currently enrolled in <b>${digitalAssets.length} courses</b>. Join the Masterclass for private community access!`;
+                        }
                     } else {
                         container.innerHTML = '';
                         placeholder.style.display = 'block';

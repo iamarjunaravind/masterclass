@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netixa | The Definitive 2026 Digital Career Mastery</title>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1437473727867655');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1437473727867655&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -54,7 +71,8 @@
 
         @media (min-width: 1024px) {
             .container {
-                max-width: 80%;
+                max-width: 1200px;
+                width: 95%;
             }
         }
 
@@ -123,6 +141,29 @@
         .menu-icon.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
         .menu-icon.active span:nth-child(2) { opacity: 0; }
         .menu-icon.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* DESKTOP NAV */
+        .desktop-nav {
+            display: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .desktop-nav a:hover { color: #fff; }
+
+        @media screen and (min-width: 1024px) {
+            .menu-icon { display: none !important; }
+            .desktop-nav { display: flex !important; }
+            .header { padding: 25px 0; }
+        }
 
         /* NAV DRAWER */
         .nav-overlay {
@@ -566,7 +607,7 @@
         /* FOOTER */
         footer {
             background: #111; /* Dark theme */
-            padding: 80px 0 40px;
+            padding: 40px 0 20px;
             border-top: 1px solid rgba(255,255,255,0.05);
             color: #fff;
         }
@@ -644,14 +685,20 @@
         
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             margin-top: 40px;
         }
 
-        .home-product-img-container { height: 150px; }
-        @media (max-width: 600px) {
-            .home-product-img-container { height: auto; }
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .home-product-img-container { height: auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        @media (min-width: 1024px) {
+            .home-product-img-container { height: 250px; }
         }
 
         .module-card {
@@ -745,12 +792,11 @@
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transform: rotate(-2deg);
             transition: 0.5s;
         }
 
         .cert-mockup:hover {
-            transform: rotate(0deg) scale(1.02);
+            transform: scale(1.02);
         }
 
         .cert-feature {
@@ -896,6 +942,7 @@
             .module-card ul li { font-size: 11px !important; }
             .module-card .icon { font-size: 30px !important; }
             .module-badge { top: 10px; right: 10px; font-size: 8px; }
+            .home-product-img-container { height: auto !important; }
         }
     </style>
 </head>
@@ -906,9 +953,14 @@
             <div class="logo-section">
                 <div class="logo-text">NETIXA</div>
             </div>
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 40px;">
+                <nav class="desktop-nav">
+                    <a href="index.html">Home</a>
+                    <a href="product.html">Digital Shop</a>
+                    <a href="contact.html">Support</a>
+                </nav>
                 <div id="authNavContainer" style="display: flex; align-items: center; gap: 15px;">
-                    <a href="login" class="nav-link" id="loginLink" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;"></a>
+                    <a href="login.html" class="nav-link" id="loginLink" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;"></a>
                 </div>
                 <div class="menu-icon" id="menuToggle">
                     <span></span>
@@ -922,15 +974,14 @@
     <div class="nav-overlay" id="navOverlay"></div>
     <div class="nav-drawer" id="navDrawer">
         <div class="logo-text">NETIXA</div>
-        <a href="#heroSlider" class="nav-link">Home</a>
-        <a href="product" class="nav-link" style="color: var(--marketing-red);">Digital Shop 🛍️</a>
-        <a href="#curriculum" class="nav-link">Curriculum</a>
-        <a href="#certification" class="nav-link">Certification</a>
-        <a href="#testimonials" class="nav-link">Testimonials</a>
-        <a href="contact" class="nav-link">Contact Support</a>
-        <a href="login" class="nav-link" style="color: var(--blue-accent);">Account Login 🔐</a>
+        <div id="drawerProfile" style="display:none; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;"></div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="orders.html" class="nav-link" id="drawerOrdersLink" style="display:none;">My Orders 📦</a>
+        <a href="product.html" class="nav-link" style="color: var(--marketing-red);">Digital Shop 🛍️</a>
+        <a href="contact.html" class="nav-link">Contact Support</a>
+        <a href="login.html" class="nav-link" id="drawerLoginLink" style="color: var(--blue-accent);">Account Login 🔐</a>
         <div style="margin-top: auto;">
-            <a href="buyform" class="btn-book" style="width: 100%; padding: 15px;">
+            <a href="buyform.html" class="btn-book" style="width: 100%; padding: 15px;">
                 <span class="btn-text" style="font-size: 14px;">BOOK NOW</span>
             </a>
         </div>
@@ -959,7 +1010,7 @@
 
     <!-- MASTERCLASS EVENT BANNER -->
     <div id="masterclassBanner" style="background: linear-gradient(135deg, #0d0d0d 0%, #1a0505 100%); border-top: 1px solid rgba(185,4,4,0.3); border-bottom: 1px solid rgba(185,4,4,0.3); padding: 30px 0;">
-        <div style="max-width: 80%; margin: 0 auto; padding: 0 25px;">
+        <div style="margin: 0 auto; padding: 0 25px;">
             <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;">
                 <!-- Left: Date + Info -->
                 <div>
@@ -998,6 +1049,7 @@
     </div>
 
     <script>
+        const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         (function() {
             // Determine next masterclass date (10th or 28th every month)
             function getNextMasterclassDate() {
@@ -1060,7 +1112,6 @@
             setInterval(updateCountdown, 1000);
 
             // CTA: show WhatsApp group if logged in AND purchased masterclass
-            const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
             const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
             const ctaEl = document.getElementById('mcCTA');
             
@@ -1070,7 +1121,7 @@
                     ctaEl.innerHTML = `
                         <div style="text-align:center;">
                             <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">Register & Get the WhatsApp Link</div>
-                            <a href="login" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🔐 Sign In to Register</a>
+                            <a href="login.html" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🔐 Sign In to Register</a>
                             <div style="font-size:11px; color:rgba(255,255,255,0.3);">Already have an account? Sign in to get the WhatsApp group link.</div>
                         </div>`;
                     return;
@@ -1102,7 +1153,7 @@
                             ctaEl.innerHTML = `
                                 <div style="text-align:center;">
                                     <div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); margin-bottom:10px;">You haven't reserved your seat yet</div>
-                                    <a href="product-details?id=masterclass" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🚀 Register Now — ₹9</a>
+                                    <a href="buyform.html" style="display:inline-block;background:var(--marketing-red,#b90404);color:#fff;padding:12px 24px;border-radius:10px;font-weight:800;font-size:14px;text-decoration:none;margin-bottom:8px;">🚀 Register Now — ₹9</a>
                                 </div>`;
                         }
                     } else {
@@ -1126,7 +1177,7 @@
             <h1 class="highlight-text-main">💎 EARN <i>₹1 LAKH+</i> PER MONTH WITH NETIXA ✨ 💰 ✨</h1>
 
             <div style="display: flex; justify-content: center; margin-bottom: 40px;">
-                <a href="buyform" class="btn-book">
+                <a href="buyform.html" class="btn-book">
                     <span class="btn-text">BOOK NOW & ACCESS EVERYTHING →</span>
                     <span class="btn-price"><i>₹ 9,991</i> <b>₹ 9 ONLY</b></span>
                 </a>
@@ -1191,7 +1242,7 @@
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:50px;">
-                    <a href="buyform" class="btn-book" style="background: var(--gold); color: #000; animation: none;">
+                    <a href="buyform.html" class="btn-book" style="background: var(--gold); color: #000; animation: none;">
                         <span class="btn-text">GET CERTIFIED TODAY →</span>
                     </a>
                 </div>
@@ -1260,7 +1311,7 @@
                 </div>
 
                 <div style="text-align:center; margin-top:50px;">
-                    <a href="buyform" class="btn-book">
+                    <a href="buyform.html" class="btn-book" onclick="fbq('track', 'InitiateCheckout')">
                         <span class="btn-text">YES, UNLOCK THE FULL CURRICULUM →</span>
                     </a>
                 </div>
@@ -1270,7 +1321,7 @@
                 <div class="container">
                     <h2>🚀 YOUR 2026 INCOME REVOLUTION STARTS HERE</h2>
                     <p>Stop watching others build their dreams. It's time to build YOURS with the world's most comprehensive digital marketing arsenal.</p>
-                    <a href="buyform" class="btn-book" style="margin-top: 0; background: #fff; color: var(--marketing-red); border: none; animation: none;">
+                    <a href="buyform.html" class="btn-book" onclick="fbq('track', 'InitiateCheckout')">
                         <span class="btn-text">YES, I WANT THIS NOW! →</span>
                         <span class="btn-price" style="color: #666;"><i style="color: #999;">₹ 9,991</i> <b style="color: var(--marketing-red);">₹ 9 ONLY</b></span>
                     </a>
@@ -1281,7 +1332,7 @@
                 <h3 style="font-family:'Outfit'; font-weight:800; color:#ff4444; margin-bottom:20px;">🌟 THE 2026 CREATOR REALITY CHECK 🌟</h3>
                 <p>Digital landscape is LOUDER 📢 and CROWDER 🏎️ than ever. If your content doesn't look professional, viewers swipe away. Use our "CHEAT CODE".</p>
                 <div style="margin-top:30px;">
-                    <a href="buyform" class="btn-book">
+                    <a href="buyform.html" class="btn-book" onclick="fbq('track', 'InitiateCheckout')">
                         <span class="btn-text">BOOK NOW BEFORE OFFER ENDS →</span>
                         <span class="btn-price"><i>₹ 9,991</i> <b>₹ 9</b></span>
                     </a>
@@ -1332,7 +1383,7 @@
 
             <div style="text-align:center; padding:80px 0;">
                 <h2 style="font-family:'Outfit'; font-weight:800; font-size:36px; margin-bottom:20px;">READY TO DOMINATE?</h2>
-                <a href="buyform" class="btn-book" style="padding:24px 60px;">
+                <a href="buyform.html" class="btn-book" style="padding:24px 60px;">
                     <span class="btn-text" style="font-size: 24px;">[ 📜 BOOK NOW & RESERVE SPOT. ] →</span>
                     <span class="btn-price" style="font-size: 18px;"><i>₹ 9,991</i> <b style="font-size: 28px;">₹ 9 ONLY TODAY</b></span>
                 </a>
@@ -1352,13 +1403,13 @@
                 <div class="footer-links">
                     <h4>LEGAL & SUPPORT</h4>
                     <ul>
-                        <li><a href="privacy">Privacy Policy</a></li>
-                        <li><a href="terms">Terms of Service</a></li>
-                        <li><a href="refund">Refund Policy</a></li>
-                        <li><a href="contact">Contact Us</a></li>
-                        <li><a href="product" style="color: var(--marketing-red); font-weight: 700;">Digital Shop</a></li>
-                        <li><a href="disclaimer">Disclaimer</a></li>
-                        <li><a href="cookies">Cookie Policy</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="refund.html">Refund Policy</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="product.html" style="color: var(--marketing-red); font-weight: 700;">Digital Shop</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
 </ul>
                 </div>
             </div>
@@ -1421,19 +1472,16 @@
 
         // NAVBAR TOGGLE
         const menuToggle = document.getElementById('menuToggle');
-        const navDrawer = document.getElementById('navDrawer');
         const navOverlay = document.getElementById('navOverlay');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navDrawer = document.getElementById('navDrawer');
 
         function toggleMenu() {
             menuToggle.classList.toggle('active');
-            navDrawer.classList.toggle('active');
             navOverlay.classList.toggle('active');
+            navDrawer.classList.toggle('active');
             document.body.style.overflow = navDrawer.classList.contains('active') ? 'hidden' : '';
         }
 
-        menuToggle.addEventListener('click', toggleMenu);
-        navOverlay.addEventListener('click', toggleMenu);
         navLinks.forEach(link => link.addEventListener('click', toggleMenu));
     </script>
     <script>
@@ -1446,18 +1494,31 @@
                 // User is logged in
                 const initial = auth.email.charAt(0).toUpperCase();
                 authNav.innerHTML = `
-                    <a href="cart" style="color: #fff; text-decoration: none; font-size: 18px; position: relative;" title="View Cart">
+                    <a href="cart.html" style="color: #fff; text-decoration: none; font-size: 18px; position: relative;" title="View Cart">
                         🛒
                     </a>
-                    <a href="user-dashboard" style="width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 14px; text-decoration: none;" title="Go to Dashboard">${initial}</a>
                 `;
 
-                // Update mobile drawer link if it exists
-                const mobileLogin = document.querySelector('.nav-drawer a[href="login"]');
-                if (mobileLogin) {
-                    mobileLogin.href = 'user-dashboard';
-                    mobileLogin.innerHTML = 'My Dashboard 👤';
-                    mobileLogin.style.color = '#fff';
+                // Update mobile drawer links
+                const drawerOrders = document.getElementById('drawerOrdersLink');
+                if (drawerOrders) drawerOrders.style.display = 'none';
+                
+                const drawerLogin = document.getElementById('drawerLoginLink');
+                if (drawerLogin) {
+                    drawerLogin.style.display = 'none';
+                }
+
+                const drawerProfile = document.getElementById('drawerProfile');
+                if (drawerProfile) {
+                    drawerProfile.style.display = 'flex';
+                    drawerProfile.innerHTML = `
+                        <div style="width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 16px;">${initial}</div>
+                        <div style="flex-grow: 1;">
+                            <div style="font-size: 14px; font-weight: 700; color: #fff;">My Account</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">${auth.email}</div>
+                        </div>
+                        <a href="user-dashboard.html" style="color: var(--blue-accent); text-decoration: none; font-size: 12px; font-weight: 700;">OPEN →</a>
+                    `;
                 }
             }
         }
@@ -1491,10 +1552,10 @@
                 grid.innerHTML = products.map((p, index) => {
                     const badge = index === 0 ? '<span class="module-badge" style="background: #ff4444;">HOT</span>' : '';
                     return `
-                        <a href="product-details?id=${p.id}" class="module-card" style="border-bottom: none; text-decoration: none; color: inherit; display: block; transition: 0.3s; cursor: pointer;">
+                        <a href="product-details.html?id=${p.id}" class="module-card" style="border-bottom: none; text-decoration: none; color: inherit; display: block; transition: 0.3s; cursor: pointer;">
                             ${badge}
                             <div class="home-product-img-container" style="width:100%; display:flex; align-items:center; justify-content:center; margin-bottom:15px; overflow:hidden;">
-                                <img src="${fixDriveLink(p.img)}" style="max-width:130%; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));" alt="${p.name}">
+                                <img src="${fixDriveLink(p.img)}" style="max-width:100%; height:auto; object-fit:contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));" alt="${p.name}">
                             </div>
                             <h4 style="font-size:16px;">${p.name}</h4>
                             <div style="margin-top:auto; display:flex; align-items:center; justify-content:center; gap:10px;">

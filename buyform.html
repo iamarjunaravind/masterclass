@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserve Your Spot | Netixa Masterclass</title>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1437473727867655');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1437473727867655&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -37,6 +54,9 @@
             padding: 0 25px;
             width: 100%;
         }
+        @media (min-width: 1024px) {
+            .container { max-width: 1200px; width: 95%; }
+        }
         .header {
             width: 100%;
             padding: 20px 0;
@@ -47,6 +67,18 @@
             top: 0;
             z-index: 1000;
         }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue-accent), var(--purple-glow));
+            opacity: 0.1;
+        }
+
         .header .container {
             display: flex;
             justify-content: space-between;
@@ -61,6 +93,60 @@
             text-transform: uppercase;
             text-decoration: none;
         }
+        .menu-icon {
+            width: 30px; height: 30px; display: flex; flex-direction: column; justify-content: space-around; cursor: pointer;
+        }
+
+        .menu-icon span {
+            width: 100%; height: 3px; background: #fff; border-radius: 10px; transition: 0.3s; transform-origin: center;
+        }
+        .menu-icon.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-icon.active span:nth-child(2) { opacity: 0; }
+        .menu-icon.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* DESKTOP NAV */
+        .desktop-nav {
+            display: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .desktop-nav a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .desktop-nav a:hover { color: #fff; }
+
+        @media screen and (min-width: 1024px) {
+            .menu-icon { display: none !important; }
+            .desktop-nav { display: flex !important; }
+            .header { padding: 25px 0; }
+        }
+
+        /* MOBILE NAV DRAWER */
+        .nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .nav-drawer {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #000; z-index: 1600; padding: 40px; transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; gap: 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-drawer.active { right: 0; }
+
+        .nav-drawer .logo-text { margin-bottom: 30px; }
+
+        .nav-link {
+            text-decoration: none; color: #fff; font-size: 18px; font-weight: 700; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: 0.2s;
+        }
+
+        .nav-link:hover { color: var(--blue-accent); padding-left: 10px; }
+
         .form-container {
             max-width: 500px;
             width: 100%;
@@ -115,6 +201,7 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             font-size: 16px;
+            color: #fff;
             transition: 0.3s;
             outline: none;
         }
@@ -193,56 +280,93 @@
             span[style*="font-size: 24px"] { font-size: 18px !important; } /* Hardcoded big text targeting */
             span[style*="font-size: 28px"] { font-size: 22px !important; } /* Hardcoded big price targeting */
         }
-</style>
+    </style>
 </head>
 <body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo-text">NETIXA</a>
+            <div style="display: flex; align-items: center; gap: 40px;">
+                <nav class="desktop-nav">
+                    <a href="index.html">Home</a>
+                    <a href="product.html">Digital Shop</a>
+                    <a href="contact.html">Support</a>
+                </nav>
+                <div id="authNavContainer" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="login.html" class="nav-link" id="loginLink" style="border: none; padding: 0; font-size: 14px; color: var(--text-secondary); display: block;"></a>
+                </div>
+                <div class="menu-icon" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+    <div class="nav-drawer" id="navDrawer">
+        <div class="logo-text">NETIXA</div>
+        <div id="drawerProfile" style="display:none; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;"></div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="orders.html" class="nav-link" id="drawerOrdersLink" style="display:none;">My Orders 📦</a>
+        <a href="product.html" class="nav-link" style="color: var(--marketing-red);">Digital Shop 🛍️</a>
+        <a href="contact.html" class="nav-link">Contact Support</a>
+        <a href="login.html" class="nav-link" id="drawerLoginLink" style="color: var(--blue-accent);">Account Login 🔐</a>
+        <div style="margin-top: auto;">
+            <a href="buyform.html" class="btn-book" style="width: 100%; padding: 15px; text-decoration: none; display: block; background: var(--marketing-red); border-radius: 12px; text-align: center; color: #fff; font-weight: 800;">
+                <span class="btn-text" style="font-size: 14px;">BOOK NOW</span>
+            </a>
+        </div>
+    </div>
+
     <main>
         <div class="form-container">
             <div class="logo">NETIXA</div>
             <h1 id="checkoutTitle">Checkout Summary</h1>
         
-        <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
-            <!-- Cart items will be injected here -->
-        </div>
-
-        <form id="leadForm">
-            <div class="input-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="entry.1509955695" placeholder="John Doe" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="email">E-mail Address</label>
-                <input type="email" id="email" name="entry.136054716" placeholder="john@example.com" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="whatsapp">WhatsApp Number</label>
-                <input type="tel" id="whatsapp" name="entry.1946851346" placeholder="+91 0000000000" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="city">State / City</label>
-                <input type="text" id="city" name="entry.1678080981" placeholder="Kerala / Kozhikode" required>
+            <div id="cartSummary" style="margin-bottom: 30px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
+                <!-- Cart items will be injected here -->
             </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn">PAY & COMPLETE ORDER →</button>
-        </form>
+            <form id="leadForm">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="entry.1509955695" placeholder="John Doe" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">E-mail Address</label>
+                    <input type="email" id="email" name="entry.136054716" placeholder="john@example.com" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="whatsapp">WhatsApp Number</label>
+                    <input type="tel" id="whatsapp" name="entry.1946851346" placeholder="+91 0000000000" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="city">State / City</label>
+                    <input type="text" id="city" name="entry.1678080981" placeholder="Kerala / Kozhikode" required>
+                </div>
 
-        <!-- Hidden Iframe for Google Form background submission -->
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSe4lKcppg4F1xK_W0WRqy8YF8vyKNkD6wYbn8RqxQg002UeHw/formResponse" 
-              method="POST" 
-              id="googleSubmitForm" 
-              target="hidden_iframe" 
-              style="display:none;">
-            <input type="hidden" name="entry.1509955695" id="gName">
-            <input type="hidden" name="entry.136054716" id="gEmail">
-            <input type="hidden" name="entry.1946851346" id="gWhatsapp">
-            <input type="hidden" name="entry.1678080981" id="gCity">
-        </form>
+                <button type="submit" class="btn-submit" id="submitBtn">PAY & COMPLETE ORDER →</button>
+            </form>
 
-            <a href="index" class="back-link">← Cancel and return</a>
+            <!-- Hidden Iframe for Google Form background submission -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSe4lKcppg4F1xK_W0WRqy8YF8vyKNkD6wYbn8RqxQg002UeHw/formResponse" 
+                  method="POST" 
+                  id="googleSubmitForm" 
+                  target="hidden_iframe" 
+                  style="display:none;">
+                <input type="hidden" name="entry.1509955695" id="gName">
+                <input type="hidden" name="entry.136054716" id="gEmail">
+                <input type="hidden" name="entry.1946851346" id="gWhatsapp">
+                <input type="hidden" name="entry.1678080981" id="gCity">
+            </form>
+
+            <a href="index.html" class="back-link">← Cancel and return</a>
             
             <p class="footer-note">Secure Payment • Powered by Razorpay • Netixa Masterclass 2026</p>
         </div>
@@ -253,69 +377,72 @@
     <script>
         const API = 'https://netixa-api.arjunaravinda.workers.dev/api';
         let products_db = {};
-
-        function fixImageLink(url) {
-            if (!url) return 'cert-bg.png';
-            if (url && url.includes('drive.google.com/file/d/')) {
-                const id = url.split('/d/')[1].split('/')[0];
-                return `https://drive.google.com/uc?export=view&id=${id}`;
-            }
-            if (url && url.includes('dropbox.com')) {
-                return url.replace('dl=0', 'dl=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-            }
-            return url;
-        }
-        const fixDriveLink = fixImageLink;
-
         const auth = JSON.parse(localStorage.getItem('netixa_auth') || '{}');
         const leadForm = document.getElementById('leadForm');
         const submitBtn = document.getElementById('submitBtn');
         let totalAmount = 0;
-        
-        window.onload = async () => {
+
+        function fixImageLink(url) {
+            if (!url) return 'cert-bg.png';
+            if (url.includes('drive.google.com/file/d/')) {
+                const id = url.split('/d/')[1].split('/')[0];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+            if (url.includes('dropbox.com')) {
+                return url.replace('dl=0', 'dl=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+            }
+            return url;
+        }
+
+        async function initPage() {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Preparing Checkout...';
             
             await renderCart();
+            updateAuthUI();
             
+            const cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+            const hasMasterclass = cart.includes('masterclass');
+
             if (auth.email) {
-                // Hide manual input fields
-                const inputs = document.querySelectorAll('.input-group');
-                inputs.forEach(el => el.style.display = 'none');
-                
-                // Pre-fill hidden fields to satisfy form validation/Razorpay
                 document.getElementById('email').value = auth.email;
                 document.getElementById('name').value = auth.name || 'Student Member';
                 document.getElementById('whatsapp').value = '9999999999';
                 document.getElementById('city').value = 'Profile Region';
 
-                // Display a secure fast-checkout message
-                const formElement = document.getElementById('leadForm');
-                const checkMsg = document.createElement('div');
-                checkMsg.innerHTML = `
-                    <div style="background: rgba(37, 99, 235, 0.1); padding: 20px; border-radius: 16px; border: 1px solid rgba(37, 99, 235, 0.3); text-align: center; margin-bottom: 25px;">
-                        <span style="display: block; font-size: 32px; margin-bottom: 15px;">⚡</span>
-                        <h3 style="font-family: 'Outfit'; font-size: 18px; color: #fff; margin-bottom: 5px;">Express Checkout</h3>
-                        <p style="color: rgba(255,255,255,0.6); font-size: 14px;">Billing configured for <br><b style="color: var(--blue-accent);">${auth.email}</b></p>
-                    </div>
-                `;
-                formElement.insertBefore(checkMsg, formElement.firstChild);
-                
-                // Update button text
-                submitBtn.textContent = 'PAY SECURELY NOW →';
+                if (!hasMasterclass) {
+                    const inputs = document.querySelectorAll('.input-group');
+                    inputs.forEach(el => el.style.display = 'none');
+                    
+                    const checkMsg = document.createElement('div');
+                    checkMsg.innerHTML = `
+                        <div style="background: rgba(37, 99, 235, 0.1); padding: 20px; border-radius: 16px; border: 1px solid rgba(37, 99, 235, 0.3); text-align: center; margin-bottom: 25px;">
+                            <span style="display: block; font-size: 32px; margin-bottom: 15px;">⚡</span>
+                            <h3 style="font-family: 'Outfit'; font-size: 18px; color: #fff; margin-bottom: 5px;">Secure Fast Checkout</h3>
+                            <p style="color: rgba(255,255,255,0.6); font-size: 14px;">Logged in as <br><b style="color: var(--blue-accent);">${auth.email}</b></p>
+                        </div>
+                    `;
+                    leadForm.insertBefore(checkMsg, leadForm.firstChild);
+                    submitBtn.textContent = 'PAY SECURELY NOW →';
+                } else {
+                    document.getElementById('checkoutTitle').innerText = 'Complete Masterclass Registration';
+                    submitBtn.textContent = 'RESERVE & PAY NOW →';
+                }
                 submitBtn.disabled = false;
             } else {
+                if (!hasMasterclass && cart.length > 0) {
+                   alert("Please sign in to your student account to purchase courses.");
+                   window.location.href = 'login.html';
+                   return;
+                }
                 submitBtn.textContent = 'PAY & COMPLETE ORDER →';
                 submitBtn.disabled = false;
             }
-        };
+        }
 
         async function renderCart() {
             let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
-            // If cart is empty, add the masterclass by default (as it was before)
-            if (cart.length === 0) {
-                cart = ['masterclass'];
-            }
+            if (cart.length === 0) cart = ['masterclass'];
 
             const summaryEl = document.getElementById('cartSummary');
             summaryEl.innerHTML = '<div style="text-align:center; padding: 20px; color:rgba(255,255,255,0.5);">Calculating total...</div>';
@@ -326,17 +453,18 @@
                 if (!res.ok) throw new Error("Failed to load products");
                 const apiProducts = await res.json();
                 
-                products_db = {};
+                products_db = {
+                    'masterclass': { name: 'Netixa Digital Marketing Masterclass', price: '₹9', img: 'slider-1.png' }
+                };
                 apiProducts.forEach(p => {
-                    products_db[p.id] = { name: p.name, price: p.price, img: fixDriveLink(p.img) };
+                    products_db[p.id] = { name: p.name, price: p.price, img: fixImageLink(p.img) };
                 });
 
                 summaryEl.innerHTML = '';
-
                 cart.forEach(id => {
                     const p = products_db[id];
                     if (p) {
-                        const priceVal = (parseInt(p.price.replace(/[^0-9]/g, '')) || 0);
+                        const priceVal = (parseInt(p.price.toString().replace(/[^0-9]/g, '')) || 0);
                         totalAmount += priceVal;
                         summaryEl.innerHTML += `
                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center;">
@@ -363,39 +491,37 @@
 
         leadForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            fbq('track', 'Lead');
 
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const whatsapp = document.getElementById('whatsapp').value;
             const city = document.getElementById('city').value;
 
-            // 1. SYNC TO GOOGLE SHEET (Background)
             document.getElementById('gName').value = name;
             document.getElementById('gEmail').value = email;
             document.getElementById('gWhatsapp').value = whatsapp;
             document.getElementById('gCity').value = city;
             document.getElementById('googleSubmitForm').submit();
 
-            // 2. PROCEED TO RAZORPAY
             submitBtn.disabled = true;
             submitBtn.textContent = 'Opening Payment Window...';
 
             const options = {
                 "key": "rzp_live_SOdqFD6JoEcac2",
-                "amount": totalAmount * 100, // Dynamic total in paise
+                "amount": totalAmount * 100,
                 "currency": "INR",
                 "name": "NETIXA EDUCATION",
                 "description": "Order for Digital Career Vault",
                 "image": "mentor.png",
                 "handler": function (response){
-                    // Save to user history if logged in
-                    if (auth.role === 'student' && auth.token) {
-                        let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
-                        if (cart.length === 0) cart = ['masterclass'];
-                        
-                        // Push each item to the backend API securely
+                    let cart = JSON.parse(localStorage.getItem('netixa_cart') || '[]');
+                    if (cart.length === 0) cart = ['masterclass'];
+                    
+                    if (auth.token) {
                         Promise.all(cart.map(id => {
                             const productName = products_db[id]?.name || id;
+                            const productId = isNaN(id) ? null : parseInt(id);
                             return fetch(`${API}/orders`, {
                                 method: 'POST',
                                 headers: {
@@ -403,35 +529,24 @@
                                     'Authorization': `Bearer ${auth.token}`
                                 },
                                 body: JSON.stringify({
+                                    product_id: productId,
                                     product_name: productName,
                                     payment_id: response.razorpay_payment_id,
                                     amount: products_db[id]?.price || 0
                                 })
                             });
-                        })).then(() => {
-                            console.log("Orders saved to DB");
-                        }).catch(e => {
-                            console.error("Failed to save orders to DB", e);
+                        })).finally(() => {
+                            localStorage.removeItem('netixa_cart');
+                            window.location.href = `success.html?payment_id=${response.razorpay_payment_id}&masterclass=${cart.includes('masterclass')}&amount=${totalAmount}`;
                         });
+                    } else {
+                        localStorage.removeItem('netixa_cart');
+                        window.location.href = `success.html?payment_id=${response.razorpay_payment_id}&masterclass=${cart.includes('masterclass')}&amount=${totalAmount}`;
                     }
-
-                    // Clear cart on success
-                    localStorage.removeItem('netixa_cart');
-                    window.location.href = `success.html?payment_id=${response.razorpay_payment_id}`;
                 },
-                "prefill": {
-                    "name": name,
-                    "email": email,
-                    "contact": whatsapp
-                },
-                "notes": {
-                    "location": city,
-                    "source": "Masterclass Website",
-                    "cart": localStorage.getItem('netixa_cart') || 'masterclass'
-                },
-                "theme": {
-                    "color": "#1e0a3d"
-                },
+                "prefill": { "name": name, "email": email, "contact": whatsapp },
+                "notes": { "location": city, "cart": localStorage.getItem('netixa_cart') || 'masterclass' },
+                "theme": { "color": "#1e0a3d" },
                 "modal": {
                     "ondismiss": function(){
                         submitBtn.disabled = false;
@@ -441,17 +556,66 @@
             };
 
             const rzp1 = new Razorpay(options);
-            
-            rzp1.on('payment.failed', function (response){
-                alert("Payment Failed: " + response.error.description);
+            rzp1.on('payment.failed', function (res){
+                alert("Payment Failed: " + res.error.description);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'PAY & COMPLETE ORDER →';
             });
-
             rzp1.open();
         });
 
-        window.onload = renderCart;
+        // Navigation
+        const menuToggle = document.getElementById('menuToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navDrawer = document.getElementById('navDrawer');
+
+        function toggleMenu() {
+            menuToggle.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            navDrawer.classList.toggle('active');
+            document.body.style.overflow = navDrawer.classList.contains('active') ? 'hidden' : '';
+        }
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if(navOverlay) navOverlay.addEventListener('click', toggleMenu);
+
+        function updateAuthUI() {
+            const loginLink = document.getElementById('loginLink');
+            const drawerProfile = document.getElementById('drawerProfile');
+            const drawerOrders = document.getElementById('drawerOrdersLink');
+            const drawerLogin = document.getElementById('drawerLoginLink');
+
+            if (auth.email) {
+                const initial = (auth.name || auth.email).charAt(0).toUpperCase();
+                if(loginLink) {
+                    loginLink.innerHTML = `Hi, ${(auth.name || auth.email).split(' ')[0]} 👋`;
+                    loginLink.href = 'user-dashboard.html';
+                }
+                if(drawerLogin) drawerLogin.style.display = 'none';
+                if(drawerOrders) drawerOrders.style.display = 'block';
+                if(drawerProfile) {
+                    drawerProfile.style.display = 'flex';
+                    drawerProfile.innerHTML = `
+                        <div style="width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 800; font-size: 16px;">${initial}</div>
+                        <div style="flex-grow: 1;">
+                            <div style="font-size: 14px; font-weight: 700; color: #fff;">My Account</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">${auth.email}</div>
+                        </div>
+                        <a href="user-dashboard.html" style="color: var(--blue-accent); text-decoration: none; font-size: 12px; font-weight: 700;">OPEN →</a>
+                    `;
+                }
+            } else {
+                if(loginLink) {
+                    loginLink.innerHTML = 'Sign In';
+                    loginLink.href = 'login.html';
+                }
+                if(drawerLogin) drawerLogin.style.display = 'block';
+                if(drawerOrders) drawerOrders.style.display = 'none';
+                if(drawerProfile) drawerProfile.style.display = 'none';
+            }
+        }
+
+        initPage();
     </script>
 </body>
 </html>

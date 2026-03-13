@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Netixa</title>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1437473727867655');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1437473727867655&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -292,6 +309,76 @@
             color: #fff;
             outline: none;
         }
+        /* MOBILE HEADER */
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            background: #000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0.1;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .menu-icon {
+            width: 30px; height: 30px; display: flex; flex-direction: column; justify-content: space-around; cursor: pointer;
+        }
+
+        .menu-icon span {
+            width: 100%; height: 3px; background: #fff; border-radius: 10px; transition: 0.3s; transform-origin: center;
+        }
+
+        .menu-icon.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .menu-icon.active span:nth-child(2) { opacity: 0; }
+        .menu-icon.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* MOBILE NAV DRAWER */
+        .nav-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1500; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .nav-overlay.active { opacity: 1; visibility: visible; }
+
+        .nav-drawer {
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #000; z-index: 1600; padding: 40px; transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; gap: 20px; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-drawer.active { right: 0; }
+        .nav-drawer .logo-text { margin-bottom: 30px; }
+
+        .nav-link {
+            text-decoration: none; color: #fff; font-size: 18px; font-weight: 700; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: 0.2s;
+        }
+        .nav-link:hover { color: var(--accent-blue); padding-left: 10px; }
 
         .modal-actions {
             display: flex;
@@ -406,13 +493,35 @@
     </div>
 
     <div class="main-content">
-        <header>
-            <h1 id="pageTitle">Overview</h1>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="font-size: 14px; opacity: 0.6;">Welcome, Admin</span>
-                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: 50%;"></div>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo-text">NETIXA</a>
+            <div style="display: flex; align-items: center; gap: 40px;">
+                <div id="authNavContainer" style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-size: 14px; opacity: 0.6;" class="welcome-text">Welcome, Admin</span>
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); border-radius: 50%;"></div>
+                </div>
+                <div class="menu-icon" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-        </header>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+    <div class="nav-drawer" id="navDrawer">
+        <div class="logo-text">ADMIN</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="#" class="nav-link" onclick="showTab('overview'); toggleMenu();">📊 Overview</a>
+        <a href="#" class="nav-link" onclick="showTab('products'); toggleMenu();">🛍️ Products</a>
+        <a href="#" class="nav-link" onclick="showTab('orders'); toggleMenu();">💰 Orders / Leads</a>
+        <a href="#" class="nav-link" onclick="showTab('users'); toggleMenu();">👥 Users</a>
+        <a href="product.html" class="nav-link" style="color: var(--marketing-red);">Digital Shop 🛍️</a>
+        <a href="contact.html" class="nav-link">Contact Support</a>
+        <a href="#" class="nav-link" id="drawerLogoutBtn" onclick="logout()" style="color: #ef4444;">🚪 Logout</a>
+    </div>
 
         <div id="tab-overview">
             <div class="stats-grid">
@@ -842,6 +951,33 @@
                 alert('Failed to delete product.');
             }
         }
+        // Menu Toggle
+        // Navigation
+        const menuToggle = document.getElementById('menuToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navDrawer = document.getElementById('navDrawer');
+
+        function toggleMenu() {
+            if(!menuToggle) return;
+            menuToggle.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            navDrawer.classList.toggle('active');
+            document.body.style.overflow = navDrawer.classList.contains('active') ? 'hidden' : '';
+        }
+
+        if(menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if(navOverlay) navOverlay.addEventListener('click', toggleMenu);
+
+        // Close drawer when a nav link is clicked
+        const navLinks = document.querySelectorAll('.nav-drawer .nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navOverlay.classList.remove('active');
+                navDrawer.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
     </script>
 </body>
 </html>

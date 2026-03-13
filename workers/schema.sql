@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS orders (
     product_name TEXT NOT NULL,
     payment_id   TEXT,
     amount       INTEGER,
-    date         TEXT DEFAULT (datetime('now'))
+    date         TEXT DEFAULT (datetime('now')),
+    product_id   INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS masterclass (

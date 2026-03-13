@@ -156,13 +156,13 @@ export default {
       const session = await getSession(request, DB);
       if (!session) return err("Not authenticated.", 401);
 
-      const { product_name, payment_id, amount } = await request.json();
+      const { product_id, product_name, payment_id, amount } = await request.json();
       if (!product_name) return err("product_name is required.");
 
       await DB.prepare(
-        "INSERT INTO orders (user_email, product_name, payment_id, amount) VALUES (?, ?, ?, ?)",
+        "INSERT INTO orders (user_email, product_id, product_name, payment_id, amount) VALUES (?, ?, ?, ?, ?)",
       )
-        .bind(session.user_email, product_name, payment_id || null, amount || 0)
+        .bind(session.user_email, product_id || null, product_name, payment_id || null, amount || 0)
         .run();
 
       return json({ ok: true });
@@ -178,7 +178,11 @@ export default {
         rows = await DB.prepare("SELECT * FROM orders ORDER BY id DESC").all();
       } else {
         rows = await DB.prepare(
-          "SELECT * FROM orders WHERE user_email = ? ORDER BY id DESC",
+          `SELECT o.*, p.result_link, p.img 
+           FROM orders o 
+           LEFT JOIN products p ON o.product_id = p.id 
+           WHERE o.user_email = ? 
+           ORDER BY o.id DESC`
         )
           .bind(session.user_email)
           .all();
